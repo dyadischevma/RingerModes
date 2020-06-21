@@ -8,14 +8,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.dyadischevma.ringermodes.R;
-import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private List<RingerModeItem> mDataItemList;
+
+    public void setListData(List<RingerModeItem> dataItemList) {
+        //setup new list
+        if (mDataItemList == null) {
+            mDataItemList = new ArrayList<>();
+        }
+        mDataItemList.clear();
+        mDataItemList.addAll(dataItemList);
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

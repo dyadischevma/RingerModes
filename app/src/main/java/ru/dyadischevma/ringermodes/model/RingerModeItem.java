@@ -1,6 +1,7 @@
 package ru.dyadischevma.ringermodes.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -13,6 +14,13 @@ public class RingerModeItem {
 
     public RingerModeItem(int id, String name, RingerMode ringerMode, int ringerModeValue) {
         this.id = id;
+        this.name = name;
+        this.ringerMode = ringerMode;
+        this.ringerModeValue = ringerModeValue;
+    }
+
+    @Ignore
+    public RingerModeItem(String name, RingerMode ringerMode, int ringerModeValue) {
         this.name = name;
         this.ringerMode = ringerMode;
         this.ringerModeValue = ringerModeValue;
