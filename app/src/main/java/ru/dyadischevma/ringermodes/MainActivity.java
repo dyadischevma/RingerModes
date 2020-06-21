@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteItem() {
-
+    public void deleteItem(RingerModeItem ringerModeItem) {
+        viewModel.deleteItem(ringerModeItem);
     }
 }

@@ -1,20 +1,22 @@
 package ru.dyadischevma.ringermodes.view;
 
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ru.dyadischevma.ringermodes.MainActivity;
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 
 public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
     private RecyclerViewAdapter mAdapter;
-    DataViewModel viewModel;
+    MainActivity mActivity;
 
-    public SwipeToDeleteHelperCallback(RecyclerViewAdapter adapter, Activity activity) {
+    public SwipeToDeleteHelperCallback(RecyclerViewAdapter adapter, MainActivity activity) {
         mAdapter = adapter;
-//        viewModel = new ViewModelProvider(activityty).get(DataViewModel.class);
+        mActivity = activity;
     }
 
     @Override
@@ -22,7 +24,6 @@ public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
         return makeMovementFlags(dragFlags, swipeFlags);
-
     }
 
     @Override
@@ -32,6 +33,6 @@ public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//        viewModel.deleteItemById(viewHolder.getAdapterPosition());
+        mActivity.deleteItem(mAdapter.getItem( viewHolder.getAdapterPosition()));
     }
 }

@@ -48,6 +48,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         } else return 0;
     }
 
+    public RingerModeItem getItem(int position) {
+        return mDataItemList.get(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final View mView;
         private final TextView mNameTextView;
