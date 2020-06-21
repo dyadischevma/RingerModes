@@ -10,4 +10,13 @@ public enum RingerMode {
     RingerMode(int value) {
         this.value = value;
     }
+
+    public static RingerMode fromInt(int value) {
+        for (RingerMode r : RingerMode.values()) {
+            if (r.value == value) {
+                return r;
+            }
+        }
+        return null;
+    }
 }
