@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.dyadischevma.ringermodes.R;
+import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -36,9 +37,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
-        holder.mNameTextView.setText(mDataItemList.get(position).getName());
-        holder.mRegimeModeTextView.setText(mDataItemList.get(position).getRingerMode().toString());
-        holder.mRegimeVolumeTextView.setText(String.valueOf(mDataItemList.get(position).getRingerModeValue()));
+        RingerModeItem item = mDataItemList.get(position);
+
+        holder.mNameTextView.setText(item.getName());
+        holder.mRegimeModeTextView.setText(item.getRingerMode().toString());
+        if (item.getRingerMode().equals(RingerMode.NORMAL)) {
+            holder.textViewLabelRingerModeVolume.setVisibility(View.VISIBLE);
+            holder.mRegimeVolumeTextView.setVisibility(View.VISIBLE);
+            holder.mRegimeVolumeTextView.setText(String.valueOf(item.getRingerModeValue()));
+        }
     }
 
     @Override
@@ -56,6 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private final View mView;
         private final TextView mNameTextView;
         private final TextView mRegimeModeTextView;
+        private final TextView textViewLabelRingerModeVolume;
         private final TextView mRegimeVolumeTextView;
 
         private RingerModeItem mRingerModeItem;
@@ -63,9 +71,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameTextView = (TextView) view.findViewById(R.id.textViewName);
-            mRegimeModeTextView = (TextView) view.findViewById(R.id.textViewRingerMode);
-            mRegimeVolumeTextView = (TextView) view.findViewById(R.id.textViewRingerModeValue);
+            mNameTextView = view.findViewById(R.id.textViewName);
+            mRegimeModeTextView = view.findViewById(R.id.textViewRingerMode);
+            textViewLabelRingerModeVolume = view.findViewById(R.id.textViewLabelRingerModeVolume);
+            mRegimeVolumeTextView = view.findViewById(R.id.textViewRingerModeValue);
         }
     }
 }

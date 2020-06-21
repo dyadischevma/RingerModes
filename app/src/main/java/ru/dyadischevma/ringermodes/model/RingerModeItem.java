@@ -17,7 +17,7 @@ public class RingerModeItem {
 
     public RingerModeItem(int id, String name, RingerMode ringerMode, int ringerModeValue) {
         this.id = id;
-        uuid = UUID.randomUUID();
+        this.uuid = UUID.randomUUID();
         this.name = name;
         this.ringerMode = ringerMode;
         this.ringerModeValue = ringerModeValue;
@@ -26,6 +26,7 @@ public class RingerModeItem {
     @Ignore
     public RingerModeItem(String name, RingerMode ringerMode, int ringerModeValue) {
         this.name = name;
+        this.uuid = UUID.randomUUID();
         this.ringerMode = ringerMode;
         this.ringerModeValue = ringerModeValue;
     }

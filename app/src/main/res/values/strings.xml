@@ -3,4 +3,9 @@
     <string name="name">Name:</string>
     <string name="ringer_mode">Ringer Mode:</string>
     <string name="volume">Volume:</string>
+    <string name="nameHint">Name</string>
+    <string name="ringer_modes_normal">NORMAL</string>
+    <string name="ringer_modes_vibrate">VIBRATE</string>
+    <string name="ringer_modes_silent">SALENT</string>
+    <string name="button_add">Add</string>
 </resources>
