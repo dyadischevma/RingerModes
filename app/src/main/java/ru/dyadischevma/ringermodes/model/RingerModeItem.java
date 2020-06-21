@@ -4,16 +4,20 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.UUID;
+
 @Entity
 public class RingerModeItem {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private UUID uuid;
     private String name;
     private RingerMode ringerMode;
     private int ringerModeValue;
 
     public RingerModeItem(int id, String name, RingerMode ringerMode, int ringerModeValue) {
         this.id = id;
+        uuid = UUID.randomUUID();
         this.name = name;
         this.ringerMode = ringerMode;
         this.ringerModeValue = ringerModeValue;
@@ -56,5 +60,13 @@ public class RingerModeItem {
 
     public void setRingerModeValue(int ringerModeValue) {
         this.ringerModeValue = ringerModeValue;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
