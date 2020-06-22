@@ -11,10 +11,10 @@ import java.util.List;
 import static androidx.room.OnConflictStrategy.IGNORE;
 
 @Dao
-public interface DataDAO {
+public interface RingerModeDAO {
     //Insert one item
     @Insert(onConflict = IGNORE)
-    void insertItem(RingerModeItem item);
+    int insertItem(RingerModeItem item);
 
     // Delete one item
     @Delete

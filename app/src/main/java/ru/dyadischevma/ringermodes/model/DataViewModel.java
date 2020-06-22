@@ -7,31 +7,37 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class DataViewModel extends AndroidViewModel {
 
-    private DataRepository mDataRepository;
+    private RingerModeRepository mRingerModeRepository;
     private LiveData<List<RingerModeItem>> mListLiveData;
 
     public DataViewModel(@NonNull Application application) {
         super(application);
-        mDataRepository = new DataRepository((application));
-        mListLiveData = mDataRepository.getAllData();
+        mRingerModeRepository = new RingerModeRepository((application));
+        mListLiveData = mRingerModeRepository.getAllData();
     }
 
     public LiveData<List<RingerModeItem>> getAllData() {
         return mListLiveData;
     }
 
-    public void insertItem(RingerModeItem ringerModeItem) {
-        mDataRepository.insert(ringerModeItem);
+    public int insertItem(RingerModeItem ringerModeItem) {
+        try {
+            return mRingerModeRepository.insert(ringerModeItem);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {
-        mDataRepository.deleteItem(ringerModeItem);
+        mRingerModeRepository.deleteItem(ringerModeItem);
     }
 
     public void deleteItemById(int idItem) {
-        mDataRepository.deleteItemById(idItem);
+        mRingerModeRepository.deleteItemById(idItem);
     }
 }

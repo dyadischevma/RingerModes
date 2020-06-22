@@ -6,15 +6,16 @@ import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-public class DataRepository {
-    private DataDAO mDataDao;
+public class RingerModeRepository {
+    private RingerModeDAO mRingerModeDao;
     private LiveData<List<RingerModeItem>> mAllData;
 
-    public DataRepository(Application application) {
+    public RingerModeRepository(Application application) {
         DataRoomDbase dataRoombase = DataRoomDbase.getDatabase(application);
-        this.mDataDao = dataRoombase.dataDAO();
-        this.mAllData = mDataDao.getAllData();
+        this.mRingerModeDao = dataRoombase.dataDAO();
+        this.mAllData = mRingerModeDao.getAllData();
     }
 
     LiveData<List<RingerModeItem>> getAllData() {
@@ -22,31 +23,30 @@ public class DataRepository {
     }
 
 
-    public void insert(RingerModeItem dataItem) {
-        new insertAsyncTask(mDataDao).execute(dataItem);
+    public int insert(RingerModeItem dataItem) throws ExecutionException, InterruptedException {
+       return new insertAsyncTask(mRingerModeDao).execute(dataItem).get();
     }
 
-    private static class insertAsyncTask extends AsyncTask<RingerModeItem, Void, Void> {
-        private DataDAO mAsyncTaskDao;
-        insertAsyncTask(DataDAO dao) {
+    private static class insertAsyncTask extends AsyncTask<RingerModeItem, Void, Integer> {
+        private RingerModeDAO mAsyncTaskDao;
+        insertAsyncTask(RingerModeDAO dao) {
             mAsyncTaskDao = dao;
         }
 
         @Override
-        protected Void doInBackground(final RingerModeItem... params) {
-            mAsyncTaskDao.insertItem(params[0]);
-            return null;
+        protected Integer doInBackground(final RingerModeItem... params) {
+            return mAsyncTaskDao.insertItem(params[0]);
         }
     }
 
 
     public void deleteItem(RingerModeItem ringerModeItem) {
-        new deleteAsyncTask(mDataDao).execute(ringerModeItem);
+        new deleteAsyncTask(mRingerModeDao).execute(ringerModeItem);
     }
 
     private static class deleteAsyncTask extends AsyncTask<RingerModeItem, Void, Void> {
-        private DataDAO mAsyncTaskDao;
-        deleteAsyncTask(DataDAO dao) {
+        private RingerModeDAO mAsyncTaskDao;
+        deleteAsyncTask(RingerModeDAO dao) {
             mAsyncTaskDao = dao;
         }
 
@@ -59,12 +59,12 @@ public class DataRepository {
 
 
     public void deleteItemById(int idItem) {
-        new deleteByIdAsyncTask(mDataDao).execute(idItem);
+        new deleteByIdAsyncTask(mRingerModeDao).execute(idItem);
     }
     // You must call this on a non-UI thread or your app will crash
     private static class deleteByIdAsyncTask extends AsyncTask<Integer, Void, Void> {
-        private DataDAO mAsyncTaskDao;
-        deleteByIdAsyncTask(DataDAO dao) {
+        private RingerModeDAO mAsyncTaskDao;
+        deleteByIdAsyncTask(RingerModeDAO dao) {
             mAsyncTaskDao = dao;
         }
 

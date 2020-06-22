@@ -54,12 +54,13 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volume = seekBar.getProgress();
-                viewModel.insertItem(new RingerModeItem(
+                RingerModeItem ringerModeItem = new RingerModeItem(
                         editTextName.getText().toString(),
                         ringerMode,
-                        volume
-                ));
+                        volume);
+
+                volume = seekBar.getProgress();
+                ringerModeItem.setId(viewModel.insertItem(ringerModeItem));
                 finish();
             }
         });
