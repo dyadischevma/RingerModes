@@ -1,24 +1,32 @@
 package ru.dyadischevma.ringermodes.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.TimePicker;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.Observable;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerMode;
-import ru.dyadischevma.ringermodes.model.RingerModeConditions;
+import ru.dyadischevma.ringermodes.model.RingerModeCondition;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
 
 public class CreateActivity extends AppCompatActivity {
@@ -26,6 +34,9 @@ public class CreateActivity extends AppCompatActivity {
     private RingerMode ringerMode = RingerMode.NORMAL;
     private SeekBar seekBar;
     private int volume = 0;
+
+    private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
+    private List<RingerModeCondition> mRingerModeConditionsList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -46,26 +57,56 @@ public class CreateActivity extends AppCompatActivity {
         RadioButton radioButtonSilent = findViewById(R.id.radioButtonSilent);
         radioButtonSilent.setOnClickListener(radioButtonClickListener);
 
-
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         seekBar = findViewById(R.id.seekBar);
         seekBar.setMin(0);
         seekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
 
-        Button button = findViewById(R.id.buttonAdd);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                volume = seekBar.getProgress();
-                RingerModeItem ringerModeItem = new RingerModeItem(
-                        editTextName.getText().toString(),
-                        ringerMode,
-                        volume);
-                viewModel.insertItem(ringerModeItem)
-                        .subscribe(l -> viewModel.insertItem(new RingerModeConditions(l,0,0)));
-                finish();
-            }
+        Button buttonAdd = findViewById(R.id.buttonAdd);
+        buttonAdd.setOnClickListener(v -> {
+            volume = seekBar.getProgress();
+            RingerModeItem ringerModeItem = new RingerModeItem(
+                    editTextName.getText().toString(),
+                    ringerMode,
+                    volume);
+
+            viewModel.insertItem(ringerModeItem)
+                    .subscribe(l -> {
+                        for (RingerModeCondition rmc : mRingerModeConditionsList) {
+                            rmc.setRingerModeId(l);
+                        }
+                        viewModel.insertRingerModeConditionsItems(mRingerModeConditionsList);
+                    });
+            finish();
         });
+
+        Button buttonCreateAddTime = findViewById(R.id.buttonCreateAddTime);
+        buttonCreateAddTime.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Name");
+            View customLayout = getLayoutInflater().inflate(R.layout.choose_time_item, null);
+            builder.setView(customLayout);
+
+            TimePicker timePicker = customLayout.findViewById(R.id.timePicker);
+            timePicker.setIs24HourView(true);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                mRingerModeConditionsList.add(new RingerModeCondition(timePicker.getHour(), timePicker.getMinute()));
+                mRecyclerViewConditionsAdapter.setListData(mRingerModeConditionsList);
+            });
+            // create and show the alert dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+
+        RecyclerView recyclerViewTimes = findViewById(R.id.recyclerViewTimes);
+        recyclerViewTimes.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerViewConditionsAdapter = new RecyclerViewConditionsAdapter();
+
+        if (mRingerModeConditionsList != null) {
+            mRecyclerViewConditionsAdapter.setListData(mRingerModeConditionsList);
+        }
+        recyclerViewTimes.setAdapter(mRecyclerViewConditionsAdapter);
     }
 
     View.OnClickListener radioButtonClickListener = new View.OnClickListener() {

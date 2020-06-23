@@ -15,16 +15,16 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RingerModeRepository {
     private RingerModeDAO mRingerModeDao;
-    private LiveData<List<RingerModeItem>> mAllData;
+    private LiveData<List<RingerModeItem>> mRingerModeItems;
 
     public RingerModeRepository(Application application) {
         DataRoomDbase dataRoombase = DataRoomDbase.getDatabase(application);
         this.mRingerModeDao = dataRoombase.dataDAO();
-        this.mAllData = mRingerModeDao.getAllData();
+        this.mRingerModeItems = mRingerModeDao.getAllRingerModeItems();
     }
 
-    LiveData<List<RingerModeItem>> getAllData() {
-        return mAllData;
+    LiveData<List<RingerModeItem>> getAllRingerModeItems() {
+        return mRingerModeItems;
     }
 
     Flowable<RingerModeItem> getRingerModeItem(long id) {
@@ -32,25 +32,32 @@ public class RingerModeRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    LiveData<List<RingerModeConditions>> getConditions(long ringerModeId) {
+    LiveData<List<RingerModeCondition>> getConditions(long ringerModeId) {
         return mRingerModeDao.getConditions(ringerModeId);
     }
 
-    LiveData<List<RingerModeConditions>> getAllConditions() {
+    LiveData<List<RingerModeCondition>> getAllConditions() {
         return mRingerModeDao.getAllConditionData();
     }
 
     public Single<Long> insert(RingerModeItem dataItem) {
-        return mRingerModeDao.insertItem(dataItem)
+        return mRingerModeDao.insertRingerModeItem(dataItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void insert(RingerModeConditions ringerModeConditions) {
-       Disposable result =  mRingerModeDao.insertItem(ringerModeConditions)
+    public void insert(RingerModeCondition ringerModeConditions) {
+        Disposable result = mRingerModeDao.insertItem(ringerModeConditions)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(l -> Log.d("Regime", "saved condition " + l));
+    }
+
+    public void insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditionList) {
+        mRingerModeDao.insertRingerModeConditionsItems(ringerModeConditionList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {

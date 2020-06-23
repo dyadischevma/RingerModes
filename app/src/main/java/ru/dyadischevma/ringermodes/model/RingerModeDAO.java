@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -16,51 +17,45 @@ import static androidx.room.OnConflictStrategy.IGNORE;
 
 @Dao
 public interface RingerModeDAO {
-    //Insert one regime_item
-    @Insert(onConflict = IGNORE)
-    Single<Long> insertItem(RingerModeItem item);
-
-    @Insert(onConflict = IGNORE)
-    Single<Long> insertItem(RingerModeConditions ringerModeConditions);
-
-    // Delete one regime_item
-    @Delete
-    Completable deleteItem(RingerModeItem item);
-
-    //Delete one regime_item by id
-    @Query("DELETE FROM ringermodeitem WHERE id = :itemId")
-    Completable deleteByItemId(int itemId);
-
-    //Get all items
+    /*
+    RingerModeItems
+     */
     @Query("SELECT * FROM ringermodeitem")
-    LiveData<List<RingerModeItem>> getAllData();
+    LiveData<List<RingerModeItem>> getAllRingerModeItems();
 
     @Query("SELECT * FROM ringermodeitem WHERE id = :itemId")
     Flowable<RingerModeItem> getRingerModeItem(long itemId);
 
-    //Delete All
-    @Query("DELETE FROM ringermodeitem")
-    Completable deleteAll();
+    @Insert(onConflict = IGNORE)
+    Single<Long> insertRingerModeItem(RingerModeItem item);
 
-
-    // Delete one regime_item
     @Delete
-    Completable deleteItem(RingerModeConditions ringerModeConditions);
+    Completable deleteItem(RingerModeItem item);
 
-    //Delete one regime_item by id
-    @Query("DELETE FROM ringermodeconditions WHERE id = :id")
+    @Query("DELETE FROM ringermodeitem WHERE id = :itemId")
+    Completable deleteByItemId(int itemId);
+
+    /*
+    RingerModeCondition
+     */
+    @Query("SELECT * FROM RingerModeCondition")
+    LiveData<List<RingerModeCondition>> getAllConditionData();
+
+    @Query("SELECT * FROM RingerModeCondition WHERE ringerModeId = :ringerModeId")
+    LiveData<List<RingerModeCondition>> getConditions(long ringerModeId);
+
+    @Insert(onConflict = IGNORE)
+    Single<Long> insertItem(RingerModeCondition ringerModeConditions);
+
+    @Insert(onConflict = IGNORE)
+    Completable insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditions);
+
+    @Query("DELETE FROM RingerModeCondition WHERE id = :id")
     Completable deleteConditionByItemId(int id);
 
-    @Query("DELETE FROM ringermodeconditions WHERE ringerModeId = :ringerModeId")
+    @Delete
+    Completable deleteRingerModeConditionItem(RingerModeCondition ringerModeConditions);
+
+    @Query("DELETE FROM RingerModeCondition WHERE ringerModeId = :ringerModeId")
     Completable deleteConditionByRingerModeId(int ringerModeId);
-
-    @Query("SELECT * FROM ringermodeconditions")
-    LiveData<List<RingerModeConditions>> getAllConditionData();
-
-    @Query("SELECT * FROM ringermodeconditions WHERE ringerModeId = :ringerModeId")
-    LiveData<List<RingerModeConditions>> getConditions(long ringerModeId);
-
-    //Delete All
-    @Query("DELETE FROM ringermodeconditions")
-    void deleteAllConditions();
 }

@@ -1,5 +1,6 @@
 package ru.dyadischevma.ringermodes.view;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.dyadischevma.ringermodes.R;
-import ru.dyadischevma.ringermodes.model.RingerModeConditions;
+import ru.dyadischevma.ringermodes.model.RingerModeCondition;
 
 public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<RecyclerViewConditionsAdapter.ViewHolder> {
-    private List<RingerModeConditions> mRingerModeConditionsList;
+    private List<RingerModeCondition> mRingerModeConditionsList;
 
-    public void setListData(List<RingerModeConditions> ringerModeConditionsList) {
+    public void setListData(List<RingerModeCondition> ringerModeConditionsList) {
         if (mRingerModeConditionsList == null) {
             mRingerModeConditionsList = new ArrayList<>();
         }
@@ -29,16 +30,17 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.condition_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_item, parent, false);
         return new RecyclerViewConditionsAdapter.ViewHolder(v);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RingerModeConditions item = mRingerModeConditionsList.get(position);
-
-        holder.textViewConditionHours.setText(String.format("%02d", item.getHour()));
-        holder.textViewConditionMinute.setText(String.format("%02d", item.getMinute()));
+        RingerModeCondition item = mRingerModeConditionsList.get(position);
+        StringBuilder text = new StringBuilder();
+        text.append(String.format("%02d", item.getHour())).append(":").append(String.format("%02d", item.getMinute()));
+        holder.textViewConditionTime.setText(text.toString());
     }
 
     @Override
@@ -49,13 +51,11 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewConditionHours;
-        private TextView textViewConditionMinute;
+        private TextView textViewConditionTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewConditionHours = itemView.findViewById(R.id.textViewConditionHours);
-            textViewConditionMinute = itemView.findViewById(R.id.textViewConditionMinute);
+            textViewConditionTime = itemView.findViewById(R.id.textViewConditionTime);
         }
     }
 }

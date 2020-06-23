@@ -7,7 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -15,27 +14,27 @@ import io.reactivex.Single;
 public class DataViewModel extends AndroidViewModel {
 
     private RingerModeRepository mRingerModeRepository;
-    private LiveData<List<RingerModeItem>> mListLiveData;
+    private LiveData<List<RingerModeItem>> mRingerModeItemsListLiveData;
 
     public DataViewModel(@NonNull Application application) {
         super(application);
         mRingerModeRepository = new RingerModeRepository((application));
-        mListLiveData = mRingerModeRepository.getAllData();
+        mRingerModeItemsListLiveData = mRingerModeRepository.getAllRingerModeItems();
     }
 
-    public LiveData<List<RingerModeItem>> getAllData() {
-        return mListLiveData;
+    public LiveData<List<RingerModeItem>> getAllRingerModeItems() {
+        return mRingerModeItemsListLiveData;
     }
 
     public Flowable<RingerModeItem> getRingerModeItem(long id) {
         return mRingerModeRepository.getRingerModeItem(id);
     }
 
-    public LiveData<List<RingerModeConditions>> getAllConditions(){
+    public LiveData<List<RingerModeCondition>> getAllConditions(){
         return mRingerModeRepository.getAllConditions();
     }
 
-    public LiveData<List<RingerModeConditions>> getConditions(long ringerModeId){
+    public LiveData<List<RingerModeCondition>> getConditions(long ringerModeId){
         return mRingerModeRepository.getConditions(ringerModeId);
     }
 
@@ -43,8 +42,12 @@ public class DataViewModel extends AndroidViewModel {
         return mRingerModeRepository.insert(ringerModeItem);
     }
 
-    public void insertItem(RingerModeConditions ringerModeConditions) {
+    public void insertItem(RingerModeCondition ringerModeConditions) {
         mRingerModeRepository.insert(ringerModeConditions);
+    }
+
+    public void insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditionArrayList){
+       mRingerModeRepository.insertRingerModeConditionsItems(ringerModeConditionArrayList);
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {

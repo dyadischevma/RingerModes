@@ -14,12 +14,15 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:fontFamily="sans-serif-condensed"
         android:hint="@string/nameHint"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonAdd"
@@ -46,19 +49,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/ringer_modes_normal" />
+            android:text="@string/ringer_modes_normal"
+            android:textColor="@color/textColor"
+            android:textSize="18sp" />
 
         <RadioButton
             android:id="@+id/radioButtonVibrate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ringer_modes_vibrate" />
+            android:text="@string/ringer_modes_vibrate"
+            android:textColor="@color/textColor"
+            android:textSize="18sp" />
 
         <RadioButton
             android:id="@+id/radioButtonSilent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ringer_modes_silent" />
+            android:text="@string/ringer_modes_silent"
+            android:textColor="@color/textColor"
+            android:textSize="18sp" />
     </RadioGroup>
 
     <SeekBar
@@ -72,6 +81,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
+    <TextView
+        android:id="@+id/textViewRegimeLabelTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/this_regime_starting_on"
+        android:textColor="@color/textColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTimes"
         android:layout_width="0dp"
@@ -82,7 +102,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewRegimeLabelTimes" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

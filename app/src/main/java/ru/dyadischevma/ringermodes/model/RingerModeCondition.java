@@ -2,12 +2,13 @@ package ru.dyadischevma.ringermodes.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(entity = RingerModeItem.class, parentColumns = "id", childColumns = "ringerModeId", onDelete = CASCADE))
-public class RingerModeConditions {
+public class RingerModeCondition {
     @PrimaryKey(autoGenerate = true)
     long id;
     long ringerModeId;
@@ -15,8 +16,14 @@ public class RingerModeConditions {
     int minute;
 //    int[] days;
 
-    public RingerModeConditions(long ringerModeId, int hour, int minute) {
+    public RingerModeCondition(long ringerModeId, int hour, int minute) {
         this.ringerModeId = ringerModeId;
+        this.hour = hour;
+        this.minute = minute;
+    }
+
+    @Ignore
+    public RingerModeCondition(int hour, int minute) {
         this.hour = hour;
         this.minute = minute;
     }

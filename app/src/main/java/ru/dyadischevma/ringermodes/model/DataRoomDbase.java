@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = {RingerModeItem.class, RingerModeConditions.class}, version = 1, exportSchema = false)
+@Database(entities = {RingerModeItem.class, RingerModeCondition.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class DataRoomDbase extends RoomDatabase {
     private static DataRoomDbase INSTANCE;
