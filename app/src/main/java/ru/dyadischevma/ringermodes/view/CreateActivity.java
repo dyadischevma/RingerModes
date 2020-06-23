@@ -1,7 +1,6 @@
 package ru.dyadischevma.ringermodes.view;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,10 +18,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dpro.widgets.WeekdaysPicker;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerMode;
@@ -34,6 +34,7 @@ public class CreateActivity extends AppCompatActivity {
     private RingerMode ringerMode = RingerMode.NORMAL;
     private SeekBar seekBar;
     private int volume = 0;
+    List<Integer> daysList = new ArrayList<>();
 
     private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
     private List<RingerModeCondition> mRingerModeConditionsList = new ArrayList<>();
@@ -84,16 +85,27 @@ public class CreateActivity extends AppCompatActivity {
         buttonCreateAddTime.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Name");
+
             View customLayout = getLayoutInflater().inflate(R.layout.choose_time_item, null);
             builder.setView(customLayout);
 
             TimePicker timePicker = customLayout.findViewById(R.id.timePicker);
             timePicker.setIs24HourView(true);
 
+            WeekdaysPicker weekdaysPicker = customLayout.findViewById(R.id.dialogWeekdaysPicker);
+            weekdaysPicker.setOnWeekdaysChangeListener((view, clickedDayOfWeek, selectedDays) -> {
+                daysList = selectedDays;
+            });
+
             builder.setPositiveButton("OK", (dialog, which) -> {
-                mRingerModeConditionsList.add(new RingerModeCondition(timePicker.getHour(), timePicker.getMinute()));
+                StringBuilder days = new StringBuilder();
+                for (int day : daysList) {
+                    days.append(day);
+                }
+                mRingerModeConditionsList.add(new RingerModeCondition(timePicker.getHour(), timePicker.getMinute(), days.toString()));
                 mRecyclerViewConditionsAdapter.setListData(mRingerModeConditionsList);
             });
+
             // create and show the alert dialog
             AlertDialog dialog = builder.create();
             dialog.show();

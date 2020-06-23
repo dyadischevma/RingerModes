@@ -14,7 +14,7 @@ public class RingerModeCondition {
     long ringerModeId;
     int hour;
     int minute;
-//    int[] days;
+    String days;
 
     public RingerModeCondition(long ringerModeId, int hour, int minute) {
         this.ringerModeId = ringerModeId;
@@ -23,9 +23,10 @@ public class RingerModeCondition {
     }
 
     @Ignore
-    public RingerModeCondition(int hour, int minute) {
+    public RingerModeCondition(int hour, int minute, String days) {
         this.hour = hour;
         this.minute = minute;
+        this.days = days;
     }
 
     public long getId() {
@@ -58,5 +59,13 @@ public class RingerModeCondition {
 
     public void setMinute(int minute) {
         this.minute = minute;
+    }
+
+    public String getDays() {
+        return days;
+    }
+
+    public void setDays(String days) {
+        this.days = days;
     }
 }

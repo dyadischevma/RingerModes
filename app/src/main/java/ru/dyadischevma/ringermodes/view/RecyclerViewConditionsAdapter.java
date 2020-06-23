@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dpro.widgets.WeekdaysPicker;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,13 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
         StringBuilder text = new StringBuilder();
         text.append(String.format("%02d", item.getHour())).append(":").append(String.format("%02d", item.getMinute()));
         holder.textViewConditionTime.setText(text.toString());
+
+        List<Integer> selectedDays = new ArrayList<>();
+        char[] charDays = mRingerModeConditionsList.get(position).getDays().toCharArray();
+        for (char charDay : charDays) {
+            selectedDays.add(charDay - '0');
+        }
+        holder.weekdaysPicker.setSelectedDays(selectedDays);
     }
 
     @Override
@@ -52,10 +61,12 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewConditionTime;
+        private WeekdaysPicker weekdaysPicker;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewConditionTime = itemView.findViewById(R.id.textViewConditionTime);
+            weekdaysPicker = itemView.findViewById(R.id.weekdaysPicker);
         }
     }
 }
