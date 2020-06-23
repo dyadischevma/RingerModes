@@ -1,5 +1,6 @@
 package ru.dyadischevma.ringermodes.view;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.dyadischevma.ringermodes.MainActivity;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
@@ -19,7 +21,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<RingerModeItem> mDataItemList;
 
     public void setListData(List<RingerModeItem> dataItemList) {
-        //setup new list
         if (mDataItemList == null) {
             mDataItemList = new ArrayList<>();
         }
@@ -31,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.regime_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -75,6 +76,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mRegimeModeTextView = view.findViewById(R.id.textViewRingerMode);
             textViewLabelRingerModeVolume = view.findViewById(R.id.textViewLabelRingerModeVolume);
             mRegimeVolumeTextView = view.findViewById(R.id.textViewRingerModeValue);
+
+            mView.setOnClickListener(v -> {
+                Intent intent = new Intent(view.getContext(), RegimeActivity.class);
+                intent.putExtra("ringerModeId", getItem(getAdapterPosition()).getId());
+                view.getContext().startActivity(intent);
+            });
         }
     }
 }

@@ -8,4 +8,11 @@
     <string name="ringer_modes_vibrate">VIBRATE</string>
     <string name="ringer_modes_silent">SALENT</string>
     <string name="button_add">Add</string>
+    <string name="time">Time</string>
+    <string name="timeDelimiter">:</string>
+    <string name="add_time">Add Time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="example_time">12:20</string>
+    <string name="this_regime_starting_on">This regime starting on:</string>
 </resources>

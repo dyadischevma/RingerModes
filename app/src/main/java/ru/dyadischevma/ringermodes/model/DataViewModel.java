@@ -8,30 +8,53 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 public class DataViewModel extends AndroidViewModel {
 
-    private DataRepository mDataRepository;
-    private LiveData<List<RingerModeItem>> mListLiveData;
+    private RingerModeRepository mRingerModeRepository;
+    private LiveData<List<RingerModeItem>> mRingerModeItemsListLiveData;
 
     public DataViewModel(@NonNull Application application) {
         super(application);
-        mDataRepository = new DataRepository((application));
-        mListLiveData = mDataRepository.getAllData();
+        mRingerModeRepository = new RingerModeRepository((application));
+        mRingerModeItemsListLiveData = mRingerModeRepository.getAllRingerModeItems();
     }
 
-    public LiveData<List<RingerModeItem>> getAllData() {
-        return mListLiveData;
+    public LiveData<List<RingerModeItem>> getAllRingerModeItems() {
+        return mRingerModeItemsListLiveData;
     }
 
-    public void insertItem(RingerModeItem ringerModeItem) {
-        mDataRepository.insert(ringerModeItem);
+    public Flowable<RingerModeItem> getRingerModeItem(long id) {
+        return mRingerModeRepository.getRingerModeItem(id);
+    }
+
+    public LiveData<List<RingerModeCondition>> getAllConditions(){
+        return mRingerModeRepository.getAllConditions();
+    }
+
+    public LiveData<List<RingerModeCondition>> getConditions(long ringerModeId){
+        return mRingerModeRepository.getConditions(ringerModeId);
+    }
+
+    public Single<Long> insertItem(RingerModeItem ringerModeItem) {
+        return mRingerModeRepository.insert(ringerModeItem);
+    }
+
+    public void insertItem(RingerModeCondition ringerModeConditions) {
+        mRingerModeRepository.insert(ringerModeConditions);
+    }
+
+    public void insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditionArrayList){
+       mRingerModeRepository.insertRingerModeConditionsItems(ringerModeConditionArrayList);
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {
-        mDataRepository.deleteItem(ringerModeItem);
+        mRingerModeRepository.deleteItem(ringerModeItem);
     }
 
     public void deleteItemById(int idItem) {
-        mDataRepository.deleteItemById(idItem);
+        mRingerModeRepository.deleteItemById(idItem);
     }
 }
