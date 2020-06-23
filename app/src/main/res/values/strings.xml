@@ -8,4 +8,6 @@
     <string name="ringer_modes_vibrate">VIBRATE</string>
     <string name="ringer_modes_silent">SALENT</string>
     <string name="button_add">Add</string>
+    <string name="time">Time</string>
+    <string name="timeDelimiter">:</string>
 </resources>

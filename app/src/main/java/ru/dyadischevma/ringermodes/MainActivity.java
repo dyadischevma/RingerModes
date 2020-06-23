@@ -35,12 +35,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         viewModel = new ViewModelProvider(this).get(DataViewModel.class);
-        viewModel.getAllData().observe(this, new Observer<List<RingerModeItem>>() {
-            @Override
-            public void onChanged(@Nullable List<RingerModeItem> dataItems) {
-                if (dataItems != null) {
-                    setListData(dataItems);
-                }
+        viewModel.getAllData().observe(this, dataItems -> {
+            if (dataItems != null) {
+                setListData(dataItems);
             }
         });
 
@@ -57,14 +54,10 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
         FloatingActionButton floatingActionButton  = findViewById(R.id.floatingActionButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CreateActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
-            }
+        floatingActionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreateActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
         });
     }
 

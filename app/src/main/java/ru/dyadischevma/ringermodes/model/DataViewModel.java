@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public class DataViewModel extends AndroidViewModel {
@@ -24,6 +25,18 @@ public class DataViewModel extends AndroidViewModel {
 
     public LiveData<List<RingerModeItem>> getAllData() {
         return mListLiveData;
+    }
+
+    public Flowable<RingerModeItem> getRingerModeItem(long id) {
+        return mRingerModeRepository.getRingerModeItem(id);
+    }
+
+    public LiveData<List<RingerModeConditions>> getAllConditions(){
+        return mRingerModeRepository.getAllConditions();
+    }
+
+    public LiveData<List<RingerModeConditions>> getConditions(long ringerModeId){
+        return mRingerModeRepository.getConditions(ringerModeId);
     }
 
     public Single<Long> insertItem(RingerModeItem ringerModeItem) {

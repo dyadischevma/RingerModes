@@ -19,7 +19,7 @@
         tools:text="ExampleName" />
 
     <TextView
-        android:id="@+id/textViewLabelRingerMode"
+        android:id="@+id/textViewLabelConditionTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -32,8 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        app:layout_constraintStart_toEndOf="@+id/textViewLabelRingerMode"
-        app:layout_constraintTop_toTopOf="@+id/textViewLabelRingerMode" />
+        app:layout_constraintStart_toEndOf="@+id/textViewLabelConditionTime"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabelConditionTime" />
 
     <TextView
         android:id="@+id/textViewLabelRingerModeVolume"
@@ -44,7 +44,7 @@
         android:text="@string/volume"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabelRingerMode" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelConditionTime" />
 
     <TextView
         android:id="@+id/textViewRingerModeValue"
