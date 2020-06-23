@@ -37,8 +37,8 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RingerModeConditions item = mRingerModeConditionsList.get(position);
 
-        holder.textViewConditionHours.setText(String.valueOf(item.getHour()));
-        holder.textViewConditionMinute.setText(String.valueOf(item.getMinute()));
+        holder.textViewConditionHours.setText(String.format("%02d", item.getHour()));
+        holder.textViewConditionMinute.setText(String.format("%02d", item.getMinute()));
     }
 
     @Override
