@@ -21,7 +21,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<RingerModeItem> mDataItemList;
 
     public void setListData(List<RingerModeItem> dataItemList) {
-        //setup new list
         if (mDataItemList == null) {
             mDataItemList = new ArrayList<>();
         }
