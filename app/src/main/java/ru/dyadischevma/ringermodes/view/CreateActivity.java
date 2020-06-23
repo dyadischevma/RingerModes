@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerMode;
+import ru.dyadischevma.ringermodes.model.RingerModeConditions;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
 
 public class CreateActivity extends AppCompatActivity {
@@ -54,13 +56,13 @@ public class CreateActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                volume = seekBar.getProgress();
                 RingerModeItem ringerModeItem = new RingerModeItem(
                         editTextName.getText().toString(),
                         ringerMode,
                         volume);
-
-                volume = seekBar.getProgress();
-                ringerModeItem.setId(viewModel.insertItem(ringerModeItem));
+                viewModel.insertItem(ringerModeItem)
+                        .subscribe(l -> viewModel.insertItem(new RingerModeConditions(l,0,0)));
                 finish();
             }
         });

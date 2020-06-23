@@ -9,13 +9,13 @@ import java.util.UUID;
 @Entity
 public class RingerModeItem {
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
     private UUID uuid;
     private String name;
     private RingerMode ringerMode;
     private int ringerModeValue;
 
-    public RingerModeItem(int id, String name, RingerMode ringerMode, int ringerModeValue) {
+    public RingerModeItem(long id, String name, RingerMode ringerMode, int ringerModeValue) {
         this.id = id;
         this.uuid = UUID.randomUUID();
         this.name = name;
@@ -31,7 +31,7 @@ public class RingerModeItem {
         this.ringerModeValue = ringerModeValue;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -47,7 +47,7 @@ public class RingerModeItem {
         return ringerModeValue;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

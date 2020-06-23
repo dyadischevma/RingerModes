@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import io.reactivex.Single;
+
 public class DataViewModel extends AndroidViewModel {
 
     private RingerModeRepository mRingerModeRepository;
@@ -24,13 +26,12 @@ public class DataViewModel extends AndroidViewModel {
         return mListLiveData;
     }
 
-    public int insertItem(RingerModeItem ringerModeItem) {
-        try {
-            return mRingerModeRepository.insert(ringerModeItem);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return -1;
+    public Single<Long> insertItem(RingerModeItem ringerModeItem) {
+        return mRingerModeRepository.insert(ringerModeItem);
+    }
+
+    public void insertItem(RingerModeConditions ringerModeConditions) {
+        mRingerModeRepository.insert(ringerModeConditions);
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {
