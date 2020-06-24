@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public interface RingerModeDAO {
     @Query("SELECT * FROM ringermodeitem WHERE id = :itemId")
     Flowable<RingerModeItem> getRingerModeItem(long itemId);
 
-    @Insert(onConflict = IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     Single<Long> insertRingerModeItem(RingerModeItem item);
 
     @Delete

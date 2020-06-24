@@ -16,8 +16,8 @@ import java.util.List;
 
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
-import ru.dyadischevma.ringermodes.view.CreateActivity;
 import ru.dyadischevma.ringermodes.view.RecyclerViewAdapter;
+import ru.dyadischevma.ringermodes.view.RegimeActivity;
 import ru.dyadischevma.ringermodes.view.SwipeToDeleteHelperCallback;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, CreateActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            Intent intent = new Intent(MainActivity.this, RegimeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         });
     }

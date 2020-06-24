@@ -31,6 +31,11 @@ public class RingerModeItem {
         this.ringerModeValue = ringerModeValue;
     }
 
+    @Ignore
+    public RingerModeItem() {
+        this.uuid = UUID.randomUUID();
+    }
+
     public long getId() {
         return id;
     }
