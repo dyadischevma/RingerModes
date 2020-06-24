@@ -20,7 +20,7 @@ import ru.dyadischevma.ringermodes.model.RingerModeCondition;
 public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<RecyclerViewConditionsAdapter.ViewHolder> {
     private List<RingerModeCondition> mRingerModeConditionsList;
 
-    public void setListData(List<RingerModeCondition> ringerModeConditionsList) {
+    public void setTimesListData(List<RingerModeCondition> ringerModeConditionsList) {
         if (mRingerModeConditionsList == null) {
             mRingerModeConditionsList = new ArrayList<>();
         }

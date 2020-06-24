@@ -1,14 +1,10 @@
 package ru.dyadischevma.ringermodes.view;
 
-import android.app.Activity;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.dyadischevma.ringermodes.MainActivity;
-import ru.dyadischevma.ringermodes.model.DataViewModel;
 
 public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
     private RecyclerViewAdapter mAdapter;
