@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         viewModel = new ViewModelProvider(this).get(DataViewModel.class);
-        viewModel.getAllRingerModeItems().observe(this, dataItems -> {
+        viewModel.getAllRingerModes().observe(this, dataItems -> {
             if (dataItems != null) {
                 setListData(dataItems);
             }
@@ -89,6 +89,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {
-        viewModel.deleteItem(ringerModeItem);
+        viewModel.deleteRingerMode(ringerModeItem);
     }
 }

@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(entity = RingerModeItem.class, parentColumns = "id", childColumns = "ringerModeId", onDelete = CASCADE))
-public class RingerModeCondition implements Comparable<RingerModeCondition> {
+public class RingerModeTimeCondition implements Comparable<RingerModeTimeCondition> {
     @PrimaryKey(autoGenerate = true)
     long id;
     long ringerModeId;
@@ -17,14 +17,14 @@ public class RingerModeCondition implements Comparable<RingerModeCondition> {
     int minute;
     String days;
 
-    public RingerModeCondition(long ringerModeId, int hour, int minute) {
+    public RingerModeTimeCondition(long ringerModeId, int hour, int minute) {
         this.ringerModeId = ringerModeId;
         this.hour = hour;
         this.minute = minute;
     }
 
     @Ignore
-    public RingerModeCondition(int hour, int minute, String days) {
+    public RingerModeTimeCondition(int hour, int minute, String days) {
         this.hour = hour;
         this.minute = minute;
         this.days = days;
@@ -71,7 +71,7 @@ public class RingerModeCondition implements Comparable<RingerModeCondition> {
     }
 
     @Override
-    public int compareTo(@NonNull RingerModeCondition o) {
+    public int compareTo(@NonNull RingerModeTimeCondition o) {
         if (o == this) {
             return 0;
         }

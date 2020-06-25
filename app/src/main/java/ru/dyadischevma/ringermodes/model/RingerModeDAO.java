@@ -13,8 +13,6 @@ import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
-import static androidx.room.OnConflictStrategy.IGNORE;
-
 @Dao
 public interface RingerModeDAO {
     /*
@@ -24,44 +22,32 @@ public interface RingerModeDAO {
     LiveData<List<RingerModeItem>> getAllRingerModeItems();
 
     @Query("SELECT * FROM ringermodeitem WHERE id = :itemId")
-    Single<RingerModeItem> getRingerModeItem(long itemId);
+    Single<RingerModeItem> getRingerMode(long itemId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Single<Long> insertRingerModeItem(RingerModeItem item);
+    Single<Long> insertRingerMode(RingerModeItem item);
 
     @Delete
-    Completable deleteItem(RingerModeItem item);
-
-    @Query("DELETE FROM ringermodeitem WHERE id = :itemId")
-    Completable deleteByItemId(int itemId);
+    Completable deleteRingerMode(RingerModeItem item);
 
     /*
     RingerModeCondition
      */
-    @Query("SELECT * FROM RingerModeCondition")
-    Single<List<RingerModeCondition>> getAllConditionData();
+    @Query("SELECT * FROM RingerModeTimeCondition")
+    Single<List<RingerModeTimeCondition>> getAllTimeConditions();
 
-    @Query("SELECT * FROM RingerModeCondition WHERE ringerModeId = :ringerModeId")
-    LiveData<List<RingerModeCondition>> getConditions(long ringerModeId);
+    @Query("SELECT * FROM RingerModeTimeCondition WHERE ringerModeId = :ringerModeId")
+    LiveData<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId);
 
-    @Query("SELECT * FROM RingerModeCondition WHERE (hour > :hour OR (hour = :hour AND minute > :minute )) AND days LIKE :day ORDER BY hour")
-    Maybe<RingerModeCondition> getNearlyCondition(int hour, int minute, String day);
+    @Query("SELECT * FROM RingerModeTimeCondition WHERE (hour > :hour OR (hour = :hour AND minute > :minute )) AND days LIKE :day ORDER BY hour")
+    Maybe<RingerModeTimeCondition> getNearestTimeCondition(int hour, int minute, String day);
 
-    @Query("SELECT * FROM RingerModeCondition WHERE days LIKE :day ORDER BY hour, minute LIMIT 1")
-    Maybe<RingerModeCondition> getMinimumTimeCondition(String day);
+    @Query("SELECT * FROM RingerModeTimeCondition WHERE days LIKE :day ORDER BY hour, minute LIMIT 1")
+    Maybe<RingerModeTimeCondition> getMinimumTimeCondition(String day);
 
-    @Insert(onConflict = IGNORE)
-    Single<Long> insertItem(RingerModeCondition ringerModeConditions);
-
-    @Insert(onConflict = IGNORE)
-    Completable insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditions);
-
-    @Query("DELETE FROM RingerModeCondition WHERE id = :id")
-    Completable deleteConditionByItemId(int id);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Completable insertRingerModeTimeConditions(List<RingerModeTimeCondition> ringerModeTimeConditions);
 
     @Delete
-    Completable deleteRingerModeConditionItem(RingerModeCondition ringerModeConditions);
-
-    @Query("DELETE FROM RingerModeCondition WHERE ringerModeId = :ringerModeId")
-    Completable deleteConditionByRingerModeId(int ringerModeId);
+    Completable deleteRingerModeTimeCondition(RingerModeTimeCondition ringerModeTimeConditions);
 }

@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
-import ru.dyadischevma.ringermodes.model.RingerModeCondition;
+import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 
 public class SetAlarm extends Service {
@@ -37,26 +37,26 @@ public class SetAlarm extends Service {
         int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
         RingerModeRepository ringerModeRepository = new RingerModeRepository(getApplication());
-        Disposable result = ringerModeRepository.getAllConditions()
+        Disposable result = ringerModeRepository.getAllTimeConditions()
                 .subscribe(s -> {
-                    RingerModeCondition ringerModeCondition = getNearestCondition(currentHour, currentMinute, currentDay, s);
-                    if (ringerModeCondition != null) {
-                        ringerModeRepository.getRingerModeItem(ringerModeCondition.getRingerModeId()).subscribe(ringerMode -> {
+                    RingerModeTimeCondition ringerModeTimeCondition = getNearestCondition(currentHour, currentMinute, currentDay, s);
+                    if (ringerModeTimeCondition != null) {
+                        ringerModeRepository.getRingerMode(ringerModeTimeCondition.getRingerModeId()).subscribe(ringerMode -> {
                             Log.d("RINGER_MODES_SET_ALARM", ringerMode.toString());
 
                             Calendar calendar = Calendar.getInstance();
                             calendar.setTimeInMillis(System.currentTimeMillis());
-                            int nearestDay = ringerModeCondition.getNearestWeekDay(currentDay);
-                            if (ringerModeCondition.getHour() < currentHour ||
-                                    (ringerModeCondition.getHour() == currentHour && ringerModeCondition.getMinute() <= currentMinute)) {
+                            int nearestDay = ringerModeTimeCondition.getNearestWeekDay(currentDay);
+                            if (ringerModeTimeCondition.getHour() < currentHour ||
+                                    (ringerModeTimeCondition.getHour() == currentHour && ringerModeTimeCondition.getMinute() <= currentMinute)) {
                                 int addDay = nearestDay - currentDay;
                                 if (addDay < 0) {
                                     addDay = addDay + 7;
                                 }
                                 calendar.add(Calendar.DATE, addDay == 0 ? 7 : addDay);
                             }
-                            calendar.set(Calendar.HOUR_OF_DAY, ringerModeCondition.getHour());
-                            calendar.set(Calendar.MINUTE, ringerModeCondition.getMinute());
+                            calendar.set(Calendar.HOUR_OF_DAY, ringerModeTimeCondition.getHour());
+                            calendar.set(Calendar.MINUTE, ringerModeTimeCondition.getMinute());
                             calendar.set(Calendar.SECOND, 0);
                             Log.d("RINGER_MODES_SET_ALARM", "Planed date: " + calendar.getTime().toString());
 
@@ -69,15 +69,15 @@ public class SetAlarm extends Service {
                                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
                             }
                         });
-                        Log.d("RINGER_MODES_SET_ALARM", "Planned regime: " + ringerModeCondition.toString());
+                        Log.d("RINGER_MODES_SET_ALARM", "Planned regime: " + ringerModeTimeCondition.toString());
                     }
                 });
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private RingerModeCondition getNearestCondition(int currentHour, int currentMinute, int currentDay, List<RingerModeCondition> ringerModeConditionArrayList) {
-        ArrayList<RingerModeCondition> resultList = new ArrayList<>();
-        for (RingerModeCondition rmc : ringerModeConditionArrayList) {
+    private RingerModeTimeCondition getNearestCondition(int currentHour, int currentMinute, int currentDay, List<RingerModeTimeCondition> ringerModeTimeConditionArrayList) {
+        ArrayList<RingerModeTimeCondition> resultList = new ArrayList<>();
+        for (RingerModeTimeCondition rmc : ringerModeTimeConditionArrayList) {
             if (rmc.getDays().contains(String.valueOf(currentDay)) &&
                     rmc.getHour() > currentHour || rmc.getHour() == currentHour && rmc.getMinute() > currentMinute) {
                 resultList.add(rmc);
@@ -89,7 +89,7 @@ public class SetAlarm extends Service {
         } else currentDay++;
 
         for (int i = 0; i < 7; i++) {
-            for (RingerModeCondition rmc : ringerModeConditionArrayList) {
+            for (RingerModeTimeCondition rmc : ringerModeTimeConditionArrayList) {
                 if (rmc.getDays().contains(String.valueOf(currentDay))) {
                     resultList.add(rmc);
                 }

@@ -1,7 +1,6 @@
 package ru.dyadischevma.ringermodes.model;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -10,7 +9,6 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class RingerModeRepository {
@@ -23,78 +21,66 @@ public class RingerModeRepository {
         this.mRingerModeItems = mRingerModeDao.getAllRingerModeItems();
     }
 
-    public LiveData<List<RingerModeItem>> getAllRingerModeItems() {
+    /*
+    RingerModeItems
+    */
+    public LiveData<List<RingerModeItem>> getAllRingerModes() {
         return mRingerModeItems;
     }
 
-    public Single<RingerModeItem> getRingerModeItem(long id) {
-        return mRingerModeDao.getRingerModeItem(id)
+    public Single<RingerModeItem> getRingerMode(long id) {
+        return mRingerModeDao.getRingerMode(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public LiveData<List<RingerModeCondition>> getConditions(long ringerModeId) {
-        return mRingerModeDao.getConditions(ringerModeId);
-    }
-
-    public Maybe<RingerModeCondition> getNearlyCondition(int hour, int minutes, int day) {
-        return mRingerModeDao.getNearlyCondition(hour, minutes,"%" + day + "%")
+    public Single<Long> insertRingerMode(RingerModeItem dataItem) {
+        return mRingerModeDao.insertRingerMode(dataItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Maybe<RingerModeCondition> getMinimumTimeCondition(int day) {
-        return mRingerModeDao.getMinimumTimeCondition("%" + day + "%")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Single<List<RingerModeCondition>> getAllConditions() {
-        return mRingerModeDao.getAllConditionData()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Single<Long> insert(RingerModeItem dataItem) {
-        return mRingerModeDao.insertRingerModeItem(dataItem)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public void insert(RingerModeCondition ringerModeConditions) {
-        Disposable result = mRingerModeDao.insertItem(ringerModeConditions)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(l -> Log.d("Regime", "saved condition " + l));
-    }
-
-    public void insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditionList) {
-        mRingerModeDao.insertRingerModeConditionsItems(ringerModeConditionList)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
-
-    public void deleteItem(RingerModeItem ringerModeItem) {
-        mRingerModeDao.deleteItem(ringerModeItem)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
-
-    public void deleteItemById(int idItem) {
-        mRingerModeDao.deleteByItemId(idItem)
+    public void deleteRingerMode(RingerModeItem ringerModeItem) {
+        mRingerModeDao.deleteRingerMode(ringerModeItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
 
     /*
-    Time Condition
-     */
+    RingerModeTimeCondition
+    */
+    public Single<List<RingerModeTimeCondition>> getAllTimeConditions() {
+        return mRingerModeDao.getAllTimeConditions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
-    public void deleteRingerModeConditionItem(RingerModeCondition ringerModeCondition) {
-        mRingerModeDao.deleteRingerModeConditionItem(ringerModeCondition)
+    public LiveData<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId) {
+        return mRingerModeDao.getTimeConditions(ringerModeId);
+    }
+
+    public Maybe<RingerModeTimeCondition> getNearestTimeCondition(int hour, int minutes, int day) {
+        return mRingerModeDao.getNearestTimeCondition(hour, minutes, "%" + day + "%")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Maybe<RingerModeTimeCondition> getMinimumTimeCondition(int day) {
+        return mRingerModeDao.getMinimumTimeCondition("%" + day + "%")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public void insertRingerModeTimeConditions(List<RingerModeTimeCondition> ringerModeTimeConditionList) {
+        mRingerModeDao.insertRingerModeTimeConditions(ringerModeTimeConditionList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
+    public void deleteRingerModeTimeCondition(RingerModeTimeCondition ringerModeTimeCondition) {
+        mRingerModeDao.deleteRingerModeTimeCondition(ringerModeTimeCondition)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();

@@ -28,7 +28,7 @@ import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerMode;
-import ru.dyadischevma.ringermodes.model.RingerModeCondition;
+import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
 
 public class RegimeActivity extends AppCompatActivity {
@@ -40,7 +40,7 @@ public class RegimeActivity extends AppCompatActivity {
     private RingerModeItem mRingerModeItem;
     private DataViewModel viewModel;
     private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
-    private List<RingerModeCondition> mRingerModeConditionsList = new ArrayList<>();
+    private List<RingerModeTimeCondition> mRingerModeTimeConditionsList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -71,13 +71,13 @@ public class RegimeActivity extends AppCompatActivity {
         if (ringerModeId == -1) {
             mRingerModeItem = new RingerModeItem();
         } else {
-            viewModel.getConditions(ringerModeId).observe(this, ringerModeConditionsList -> {
+            viewModel.getTimeConditions(ringerModeId).observe(this, ringerModeConditionsList -> {
                 if (ringerModeConditionsList != null) {
                     setConditionsListData(ringerModeConditionsList);
                 }
             });
 
-            Disposable result = viewModel.getRingerModeItem(ringerModeId).subscribe(
+            Disposable result = viewModel.getRingerMode(ringerModeId).subscribe(
                     ringerModeItem -> {
                         mRingerModeItem = ringerModeItem;
                         mRingerMode = ringerModeItem.getRingerMode();
@@ -125,8 +125,8 @@ public class RegimeActivity extends AppCompatActivity {
                 for (int day : mDaysList) {
                     days.append(day);
                 }
-                mRingerModeConditionsList.add(new RingerModeCondition(timePicker.getHour(), timePicker.getMinute(), days.toString()));
-                mRecyclerViewConditionsAdapter.setTimesListData(mRingerModeConditionsList);
+                mRingerModeTimeConditionsList.add(new RingerModeTimeCondition(timePicker.getHour(), timePicker.getMinute(), days.toString()));
+                mRecyclerViewConditionsAdapter.setTimesListData(mRingerModeTimeConditionsList);
             });
 
             AlertDialog dialog = builder.create();
@@ -137,8 +137,8 @@ public class RegimeActivity extends AppCompatActivity {
         recyclerViewTimes.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerViewConditionsAdapter = new RecyclerViewConditionsAdapter();
 
-        if (mRingerModeConditionsList != null) {
-            mRecyclerViewConditionsAdapter.setTimesListData(mRingerModeConditionsList);
+        if (mRingerModeTimeConditionsList != null) {
+            mRecyclerViewConditionsAdapter.setTimesListData(mRingerModeTimeConditionsList);
         }
         recyclerViewTimes.setAdapter(mRecyclerViewConditionsAdapter);
 
@@ -155,12 +155,12 @@ public class RegimeActivity extends AppCompatActivity {
             mRingerModeItem.setRingerMode(mRingerMode);
             mRingerModeItem.setRingerModeValue(mVolume);
 
-            viewModel.insertItem(mRingerModeItem)
+            viewModel.insertRingerMode(mRingerModeItem)
                     .subscribe(l -> {
-                        for (RingerModeCondition rmc : mRingerModeConditionsList) {
+                        for (RingerModeTimeCondition rmc : mRingerModeTimeConditionsList) {
                             rmc.setRingerModeId(l);
                         }
-                        viewModel.insertRingerModeConditionsItems(mRingerModeConditionsList);
+                        viewModel.insertRingerModeTimeConditions(mRingerModeTimeConditionsList);
                     });
             finish();
         });
@@ -198,19 +198,19 @@ public class RegimeActivity extends AppCompatActivity {
         }
     };
 
-    public void deleteRingerModeConditionItem(RingerModeCondition ringerModeCondition) {
-        viewModel.deleteRingerModeConditionItem(ringerModeCondition);
+    public void deleteRingerModeConditionItem(RingerModeTimeCondition ringerModeTimeCondition) {
+        viewModel.deleteRingerModeTimeCondition(ringerModeTimeCondition);
     }
 
-    private void setConditionsListData(List<RingerModeCondition> ringerModeConditionsList) {
-        if (mRingerModeConditionsList == null) {
-            mRingerModeConditionsList = new ArrayList<>();
+    private void setConditionsListData(List<RingerModeTimeCondition> ringerModeTimeConditionsList) {
+        if (mRingerModeTimeConditionsList == null) {
+            mRingerModeTimeConditionsList = new ArrayList<>();
         }
-        mRingerModeConditionsList.clear();
-        mRingerModeConditionsList.addAll(ringerModeConditionsList);
+        mRingerModeTimeConditionsList.clear();
+        mRingerModeTimeConditionsList.addAll(ringerModeTimeConditionsList);
 
         if (mRecyclerViewConditionsAdapter != null) {
-            mRecyclerViewConditionsAdapter.setTimesListData(ringerModeConditionsList);
+            mRecyclerViewConditionsAdapter.setTimesListData(ringerModeTimeConditionsList);
         }
     }
 }

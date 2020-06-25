@@ -19,54 +19,52 @@ public class DataViewModel extends AndroidViewModel {
     public DataViewModel(@NonNull Application application) {
         super(application);
         mRingerModeRepository = new RingerModeRepository(application);
-        mRingerModeItemsListLiveData = mRingerModeRepository.getAllRingerModeItems();
+        mRingerModeItemsListLiveData = mRingerModeRepository.getAllRingerModes();
     }
 
-    public LiveData<List<RingerModeItem>> getAllRingerModeItems() {
+    /*
+       RingerModeItems
+    */
+    public LiveData<List<RingerModeItem>> getAllRingerModes() {
         return mRingerModeItemsListLiveData;
     }
 
-    public Single<RingerModeItem> getRingerModeItem(long id) {
-        return mRingerModeRepository.getRingerModeItem(id);
+    public Single<RingerModeItem> getRingerMode(long id) {
+        return mRingerModeRepository.getRingerMode(id);
     }
 
-    public Single<List<RingerModeCondition>> getAllConditions(){
-        return mRingerModeRepository.getAllConditions();
+    public Single<Long> insertRingerMode(RingerModeItem ringerModeItem) {
+        return mRingerModeRepository.insertRingerMode(ringerModeItem);
     }
 
-    public LiveData<List<RingerModeCondition>> getConditions(long ringerModeId){
-        return mRingerModeRepository.getConditions(ringerModeId);
+    public void deleteRingerMode(RingerModeItem ringerModeItem) {
+        mRingerModeRepository.deleteRingerMode(ringerModeItem);
     }
 
-    public Maybe<RingerModeCondition> getNearlyCondition(int hour, int minutes, int day) {
-        return mRingerModeRepository.getNearlyCondition(hour, minutes, day);
+    /*
+        RingerModeTimeCondition
+    */
+    public Single<List<RingerModeTimeCondition>> getAllTimeConditions() {
+        return mRingerModeRepository.getAllTimeConditions();
     }
 
-    public Maybe<RingerModeCondition> getMinimumTimeCondition(int day) {
+    public LiveData<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId) {
+        return mRingerModeRepository.getTimeConditions(ringerModeId);
+    }
+
+    public Maybe<RingerModeTimeCondition> getNearestTimeCondition(int hour, int minutes, int day) {
+        return mRingerModeRepository.getNearestTimeCondition(hour, minutes, day);
+    }
+
+    public Maybe<RingerModeTimeCondition> getMinimumTimeCondition(int day) {
         return mRingerModeRepository.getMinimumTimeCondition(day);
     }
 
-    public Single<Long> insertItem(RingerModeItem ringerModeItem) {
-        return mRingerModeRepository.insert(ringerModeItem);
+    public void insertRingerModeTimeConditions(List<RingerModeTimeCondition> ringerModeTimeConditionArrayList) {
+        mRingerModeRepository.insertRingerModeTimeConditions(ringerModeTimeConditionArrayList);
     }
 
-    public void insertItem(RingerModeCondition ringerModeConditions) {
-        mRingerModeRepository.insert(ringerModeConditions);
-    }
-
-    public void insertRingerModeConditionsItems(List<RingerModeCondition> ringerModeConditionArrayList){
-       mRingerModeRepository.insertRingerModeConditionsItems(ringerModeConditionArrayList);
-    }
-
-    public void deleteItem(RingerModeItem ringerModeItem) {
-        mRingerModeRepository.deleteItem(ringerModeItem);
-    }
-
-    public void deleteRingerModeConditionItem(RingerModeCondition ringerModeCondition) {
-        mRingerModeRepository.deleteRingerModeConditionItem(ringerModeCondition);
-    }
-
-    public void deleteItemById(int idItem) {
-        mRingerModeRepository.deleteItemById(idItem);
+    public void deleteRingerModeTimeCondition(RingerModeTimeCondition ringerModeTimeCondition) {
+        mRingerModeRepository.deleteRingerModeTimeCondition(ringerModeTimeCondition);
     }
 }

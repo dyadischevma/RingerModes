@@ -15,17 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.dyadischevma.ringermodes.R;
-import ru.dyadischevma.ringermodes.model.RingerModeCondition;
+import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 
 public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<RecyclerViewConditionsAdapter.ViewHolder> {
-    private List<RingerModeCondition> mRingerModeConditionsList;
+    private List<RingerModeTimeCondition> mRingerModeTimeConditionsList;
 
-    public void setTimesListData(List<RingerModeCondition> ringerModeConditionsList) {
-        if (mRingerModeConditionsList == null) {
-            mRingerModeConditionsList = new ArrayList<>();
+    public void setTimesListData(List<RingerModeTimeCondition> ringerModeTimeConditionsList) {
+        if (mRingerModeTimeConditionsList == null) {
+            mRingerModeTimeConditionsList = new ArrayList<>();
         }
-        mRingerModeConditionsList.clear();
-        mRingerModeConditionsList.addAll(ringerModeConditionsList);
+        mRingerModeTimeConditionsList.clear();
+        mRingerModeTimeConditionsList.addAll(ringerModeTimeConditionsList);
         notifyDataSetChanged();
     }
 
@@ -39,13 +39,13 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RingerModeCondition item = mRingerModeConditionsList.get(position);
+        RingerModeTimeCondition item = mRingerModeTimeConditionsList.get(position);
         StringBuilder text = new StringBuilder();
         text.append(String.format("%02d", item.getHour())).append(":").append(String.format("%02d", item.getMinute()));
         holder.textViewConditionTime.setText(text.toString());
 
         List<Integer> selectedDays = new ArrayList<>();
-        char[] charDays = mRingerModeConditionsList.get(position).getDays().toCharArray();
+        char[] charDays = mRingerModeTimeConditionsList.get(position).getDays().toCharArray();
         for (char charDay : charDays) {
             selectedDays.add(charDay - '0');
         }
@@ -54,13 +54,13 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemCount() {
-        if (mRingerModeConditionsList != null) {
-            return mRingerModeConditionsList.size();
+        if (mRingerModeTimeConditionsList != null) {
+            return mRingerModeTimeConditionsList.size();
         } else return 0;
     }
 
-    public RingerModeCondition getItem(int position) {
-        return mRingerModeConditionsList.get(position);
+    public RingerModeTimeCondition getItem(int position) {
+        return mRingerModeTimeConditionsList.get(position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
