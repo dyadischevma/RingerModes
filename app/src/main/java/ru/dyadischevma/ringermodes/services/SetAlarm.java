@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.model.RingerModeRepository;
@@ -23,6 +24,8 @@ import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 public class SetAlarm extends Service {
     public SetAlarm() {
     }
+
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,11 +40,11 @@ public class SetAlarm extends Service {
         int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
         RingerModeRepository ringerModeRepository = new RingerModeRepository(getApplication());
-        Disposable result = ringerModeRepository.getAllTimeConditions()
+        Disposable disposable = ringerModeRepository.getAllTimeConditions()
                 .subscribe(s -> {
                     RingerModeTimeCondition ringerModeTimeCondition = getNearestCondition(currentHour, currentMinute, currentDay, s);
                     if (ringerModeTimeCondition != null) {
-                        ringerModeRepository.getRingerMode(ringerModeTimeCondition.getRingerModeId()).subscribe(ringerMode -> {
+                        Disposable ringerModeDisposable = ringerModeRepository.getRingerMode(ringerModeTimeCondition.getRingerModeId()).subscribe(ringerMode -> {
                             Log.d("RINGER_MODES_SET_ALARM", ringerMode.toString());
 
                             Calendar calendar = Calendar.getInstance();
@@ -69,10 +72,19 @@ public class SetAlarm extends Service {
                                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
                             }
                         });
+                        compositeDisposable.add(ringerModeDisposable);
                         Log.d("RINGER_MODES_SET_ALARM", "Planned regime: " + ringerModeTimeCondition.toString());
                     }
                 });
+        compositeDisposable.add(disposable);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
     }
 
     private RingerModeTimeCondition getNearestCondition(int currentHour, int currentMinute, int currentDay, List<RingerModeTimeCondition> ringerModeTimeConditionArrayList) {

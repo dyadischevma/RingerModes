@@ -24,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.DataViewModel;
@@ -41,6 +42,8 @@ public class RegimeActivity extends AppCompatActivity {
     private DataViewModel viewModel;
     private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
     private List<RingerModeTimeCondition> mRingerModeTimeConditionsList = new ArrayList<>();
+
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -63,7 +66,9 @@ public class RegimeActivity extends AppCompatActivity {
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mSeekBar = findViewById(R.id.seekBar);
         mSeekBar.setMin(0);
-        mSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+        if (audioManager != null) {
+            mSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
+        }
 
         long ringerModeId = getIntent().getLongExtra("ringerModeId", -1);
 
@@ -77,32 +82,33 @@ public class RegimeActivity extends AppCompatActivity {
                 }
             });
 
-            Disposable result = viewModel.getRingerMode(ringerModeId).subscribe(
-                    ringerModeItem -> {
-                        mRingerModeItem = ringerModeItem;
-                        mRingerMode = ringerModeItem.getRingerMode();
-                        editTextName.setText(mRingerModeItem.getName());
-                        editTextName.setSelection(editTextName.getText().toString().length());
+            Disposable disposable = viewModel.getRingerMode(ringerModeId)
+                    .subscribe(ringerModeItem -> {
+                                mRingerModeItem = ringerModeItem;
+                                mRingerMode = ringerModeItem.getRingerMode();
+                                editTextName.setText(mRingerModeItem.getName());
+                                editTextName.setSelection(editTextName.getText().toString().length());
 
-                        switch (mRingerModeItem.getRingerMode()) {
-                            case NORMAL:
-                                radioButtonNormal.setChecked(true);
-                                mSeekBar.setEnabled(true);
-                                mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
-                                break;
-                            case VIBRATE:
-                                radioButtonVibrate.setChecked(true);
-                                mSeekBar.setEnabled(false);
-                                mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
-                                break;
-                            case SILENT:
-                                radioButtonSilent.setChecked(true);
-                                mSeekBar.setEnabled(false);
-                                mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
-                                break;
-                        }
-                    }
-            );
+                                switch (mRingerModeItem.getRingerMode()) {
+                                    case NORMAL:
+                                        radioButtonNormal.setChecked(true);
+                                        mSeekBar.setEnabled(true);
+                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
+                                        break;
+                                    case VIBRATE:
+                                        radioButtonVibrate.setChecked(true);
+                                        mSeekBar.setEnabled(false);
+                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
+                                        break;
+                                    case SILENT:
+                                        radioButtonSilent.setChecked(true);
+                                        mSeekBar.setEnabled(false);
+                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
+                                        break;
+                                }
+                            }
+                    );
+            compositeDisposable.add(disposable);
         }
 
         FloatingActionButton floatingActionButtonAddTime = findViewById(R.id.floatingActionButtonAddTime);
@@ -155,7 +161,7 @@ public class RegimeActivity extends AppCompatActivity {
             mRingerModeItem.setRingerMode(mRingerMode);
             mRingerModeItem.setRingerModeValue(mVolume);
 
-            viewModel.insertRingerMode(mRingerModeItem)
+            Disposable insertRingerMode = viewModel.insertRingerMode(mRingerModeItem)
                     .subscribe(l -> {
                         for (RingerModeTimeCondition rmc : mRingerModeTimeConditionsList) {
                             rmc.setRingerModeId(l);
@@ -163,7 +169,14 @@ public class RegimeActivity extends AppCompatActivity {
                         viewModel.insertRingerModeTimeConditions(mRingerModeTimeConditionsList);
                     });
             finish();
+            compositeDisposable.add(insertRingerMode);
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
     }
 
     View.OnClickListener radioButtonClickListener = new View.OnClickListener() {
