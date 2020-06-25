@@ -7,11 +7,10 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 import static androidx.room.OnConflictStrategy.IGNORE;
@@ -25,7 +24,7 @@ public interface RingerModeDAO {
     LiveData<List<RingerModeItem>> getAllRingerModeItems();
 
     @Query("SELECT * FROM ringermodeitem WHERE id = :itemId")
-    Flowable<RingerModeItem> getRingerModeItem(long itemId);
+    Single<RingerModeItem> getRingerModeItem(long itemId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Single<Long> insertRingerModeItem(RingerModeItem item);
@@ -40,10 +39,16 @@ public interface RingerModeDAO {
     RingerModeCondition
      */
     @Query("SELECT * FROM RingerModeCondition")
-    LiveData<List<RingerModeCondition>> getAllConditionData();
+    Single<List<RingerModeCondition>> getAllConditionData();
 
     @Query("SELECT * FROM RingerModeCondition WHERE ringerModeId = :ringerModeId")
     LiveData<List<RingerModeCondition>> getConditions(long ringerModeId);
+
+    @Query("SELECT * FROM RingerModeCondition WHERE (hour > :hour OR (hour = :hour AND minute > :minute )) AND days LIKE :day ORDER BY hour")
+    Maybe<RingerModeCondition> getNearlyCondition(int hour, int minute, String day);
+
+    @Query("SELECT * FROM RingerModeCondition WHERE days LIKE :day ORDER BY hour, minute LIMIT 1")
+    Maybe<RingerModeCondition> getMinimumTimeCondition(String day);
 
     @Insert(onConflict = IGNORE)
     Single<Long> insertItem(RingerModeCondition ringerModeConditions);

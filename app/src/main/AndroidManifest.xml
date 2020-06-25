@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.dyadischevma.ringermodes">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".services.SetAlarm"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".services.ChangeRingerMode"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity android:name=".view.RegimeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 public class DataViewModel extends AndroidViewModel {
@@ -18,7 +18,7 @@ public class DataViewModel extends AndroidViewModel {
 
     public DataViewModel(@NonNull Application application) {
         super(application);
-        mRingerModeRepository = new RingerModeRepository((application));
+        mRingerModeRepository = new RingerModeRepository(application);
         mRingerModeItemsListLiveData = mRingerModeRepository.getAllRingerModeItems();
     }
 
@@ -26,16 +26,24 @@ public class DataViewModel extends AndroidViewModel {
         return mRingerModeItemsListLiveData;
     }
 
-    public Flowable<RingerModeItem> getRingerModeItem(long id) {
+    public Single<RingerModeItem> getRingerModeItem(long id) {
         return mRingerModeRepository.getRingerModeItem(id);
     }
 
-    public LiveData<List<RingerModeCondition>> getAllConditions(){
+    public Single<List<RingerModeCondition>> getAllConditions(){
         return mRingerModeRepository.getAllConditions();
     }
 
     public LiveData<List<RingerModeCondition>> getConditions(long ringerModeId){
         return mRingerModeRepository.getConditions(ringerModeId);
+    }
+
+    public Maybe<RingerModeCondition> getNearlyCondition(int hour, int minutes, int day) {
+        return mRingerModeRepository.getNearlyCondition(hour, minutes, day);
+    }
+
+    public Maybe<RingerModeCondition> getMinimumTimeCondition(int day) {
+        return mRingerModeRepository.getMinimumTimeCondition(day);
     }
 
     public Single<Long> insertItem(RingerModeItem ringerModeItem) {
@@ -52,6 +60,10 @@ public class DataViewModel extends AndroidViewModel {
 
     public void deleteItem(RingerModeItem ringerModeItem) {
         mRingerModeRepository.deleteItem(ringerModeItem);
+    }
+
+    public void deleteRingerModeConditionItem(RingerModeCondition ringerModeCondition) {
+        mRingerModeRepository.deleteRingerModeConditionItem(ringerModeCondition);
     }
 
     public void deleteItemById(int idItem) {

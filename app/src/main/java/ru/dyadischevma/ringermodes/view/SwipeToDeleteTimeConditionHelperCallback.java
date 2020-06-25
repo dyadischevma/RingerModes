@@ -4,13 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import ru.dyadischevma.ringermodes.MainActivity;
+public class SwipeToDeleteTimeConditionHelperCallback extends ItemTouchHelper.Callback {
+    private RecyclerViewConditionsAdapter mAdapter;
+    RegimeActivity mActivity;
 
-public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
-    private RecyclerViewAdapter mAdapter;
-    MainActivity mActivity;
-
-    public SwipeToDeleteHelperCallback(RecyclerViewAdapter adapter, MainActivity activity) {
+    public SwipeToDeleteTimeConditionHelperCallback(RecyclerViewConditionsAdapter adapter, RegimeActivity activity) {
         mAdapter = adapter;
         mActivity = activity;
     }
@@ -29,6 +27,6 @@ public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        mActivity.deleteItem(mAdapter.getItem(viewHolder.getAdapterPosition()));
+        mActivity.deleteRingerModeConditionItem(mAdapter.getItem(viewHolder.getAdapterPosition()));
     }
 }

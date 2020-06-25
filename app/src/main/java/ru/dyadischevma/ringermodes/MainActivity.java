@@ -1,7 +1,10 @@
 package ru.dyadischevma.ringermodes;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +19,7 @@ import java.util.List;
 
 import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
+import ru.dyadischevma.ringermodes.services.SetAlarm;
 import ru.dyadischevma.ringermodes.view.RecyclerViewAdapter;
 import ru.dyadischevma.ringermodes.view.RegimeActivity;
 import ru.dyadischevma.ringermodes.view.SwipeToDeleteHelperCallback;
@@ -30,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null && !notificationManager.isNotificationPolicyAccessGranted()) {
+            Intent intent =
+                    new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivityForResult(intent, 0);
+        }
 
         viewModel = new ViewModelProvider(this).get(DataViewModel.class);
         viewModel.getAllRingerModeItems().observe(this, dataItems -> {
@@ -58,10 +70,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        startService(new Intent(this, SetAlarm.class));
+        super.onResume();
+    }
 
     private void setListData(List<RingerModeItem> dataItemList) {
-        //if data changed, set new list to adapter of recyclerview
-
         if (mRingerModeItemList == null) {
             mRingerModeItemList = new ArrayList<>();
         }

@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,6 +80,7 @@ public class RegimeActivity extends AppCompatActivity {
             Disposable result = viewModel.getRingerModeItem(ringerModeId).subscribe(
                     ringerModeItem -> {
                         mRingerModeItem = ringerModeItem;
+                        mRingerMode = ringerModeItem.getRingerMode();
                         editTextName.setText(mRingerModeItem.getName());
                         editTextName.setSelection(editTextName.getText().toString().length());
 
@@ -140,6 +142,10 @@ public class RegimeActivity extends AppCompatActivity {
         }
         recyclerViewTimes.setAdapter(mRecyclerViewConditionsAdapter);
 
+        SwipeToDeleteTimeConditionHelperCallback swipeToDeleteTimeConditionHelperCallback = new SwipeToDeleteTimeConditionHelperCallback(mRecyclerViewConditionsAdapter, this);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteTimeConditionHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewTimes);
+
         FloatingActionButton floatingActionButtonSave = findViewById(R.id.floatingActionButtonSave);
         floatingActionButtonSave.setOnClickListener(v ->
 
@@ -191,6 +197,10 @@ public class RegimeActivity extends AppCompatActivity {
             }
         }
     };
+
+    public void deleteRingerModeConditionItem(RingerModeCondition ringerModeCondition) {
+        viewModel.deleteRingerModeConditionItem(ringerModeCondition);
+    }
 
     private void setConditionsListData(List<RingerModeCondition> ringerModeConditionsList) {
         if (mRingerModeConditionsList == null) {

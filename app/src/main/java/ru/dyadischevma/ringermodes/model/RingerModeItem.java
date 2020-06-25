@@ -1,5 +1,6 @@
 package ru.dyadischevma.ringermodes.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -74,5 +75,17 @@ public class RingerModeItem {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "RingerModeItem{" +
+                "id=" + id +
+                ", uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", ringerMode=" + ringerMode +
+                ", ringerModeValue=" + ringerModeValue +
+                '}';
     }
 }

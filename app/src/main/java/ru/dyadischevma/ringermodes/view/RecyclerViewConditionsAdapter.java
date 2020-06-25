@@ -59,6 +59,10 @@ public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<Recycler
         } else return 0;
     }
 
+    public RingerModeCondition getItem(int position) {
+        return mRingerModeConditionsList.get(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewConditionTime;
         private WeekdaysPicker weekdaysPicker;

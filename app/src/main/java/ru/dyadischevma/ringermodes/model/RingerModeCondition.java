@@ -1,5 +1,6 @@
 package ru.dyadischevma.ringermodes.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -8,7 +9,7 @@ import androidx.room.PrimaryKey;
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(entity = RingerModeItem.class, parentColumns = "id", childColumns = "ringerModeId", onDelete = CASCADE))
-public class RingerModeCondition {
+public class RingerModeCondition implements Comparable<RingerModeCondition> {
     @PrimaryKey(autoGenerate = true)
     long id;
     long ringerModeId;
@@ -67,5 +68,40 @@ public class RingerModeCondition {
 
     public void setDays(String days) {
         this.days = days;
+    }
+
+    @Override
+    public int compareTo(@NonNull RingerModeCondition o) {
+        if (o == this) {
+            return 0;
+        }
+        if (o.hour > this.hour) {
+            return -1;
+        }
+        if (o.hour < this.hour) {
+            return 0;
+        } else {
+            return Integer.compare(this.minute, o.minute);
+        }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "RingerModeCondition{" +
+                "id=" + id +
+                ", ringerModeId=" + ringerModeId +
+                ", hour=" + hour +
+                ", minute=" + minute +
+                ", days='" + days + '\'' +
+                '}';
+    }
+
+    public int getNearestWeekDay(int day) {
+        char[] charDays = days.toCharArray();
+        for (char charDay : charDays) {
+            if ((charDay - '0') - day > 0) return (charDay - '0');
+        }
+        return charDays[0] - '0';
     }
 }
