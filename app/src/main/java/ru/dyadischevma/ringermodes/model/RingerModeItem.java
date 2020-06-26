@@ -14,22 +14,22 @@ public class RingerModeItem {
     private UUID uuid;
     private String name;
     private RingerMode ringerMode;
-    private int ringerModeValue;
+    private int ringerModeVolume;
 
-    public RingerModeItem(long id, String name, RingerMode ringerMode, int ringerModeValue) {
+    public RingerModeItem(long id, String name, RingerMode ringerMode, int ringerModeVolume) {
         this.id = id;
         this.uuid = UUID.randomUUID();
         this.name = name;
         this.ringerMode = ringerMode;
-        this.ringerModeValue = ringerModeValue;
+        this.ringerModeVolume = ringerModeVolume;
     }
 
     @Ignore
-    public RingerModeItem(String name, RingerMode ringerMode, int ringerModeValue) {
+    public RingerModeItem(String name, RingerMode ringerMode, int ringerModeVolume) {
         this.name = name;
         this.uuid = UUID.randomUUID();
         this.ringerMode = ringerMode;
-        this.ringerModeValue = ringerModeValue;
+        this.ringerModeVolume = ringerModeVolume;
     }
 
     @Ignore
@@ -49,8 +49,8 @@ public class RingerModeItem {
         return ringerMode;
     }
 
-    public int getRingerModeValue() {
-        return ringerModeValue;
+    public int getRingerModeVolume() {
+        return ringerModeVolume;
     }
 
     public void setId(long id) {
@@ -65,8 +65,8 @@ public class RingerModeItem {
         this.ringerMode = ringerMode;
     }
 
-    public void setRingerModeValue(int ringerModeValue) {
-        this.ringerModeValue = ringerModeValue;
+    public void setRingerModeVolume(int ringerModeVolume) {
+        this.ringerModeVolume = ringerModeVolume;
     }
 
     public UUID getUuid() {
@@ -85,7 +85,7 @@ public class RingerModeItem {
                 ", uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", ringerMode=" + ringerMode +
-                ", ringerModeValue=" + ringerModeValue +
+                ", ringerModeValue=" + ringerModeVolume +
                 '}';
     }
 }

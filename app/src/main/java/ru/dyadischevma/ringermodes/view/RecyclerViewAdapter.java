@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.dyadischevma.ringermodes.MainActivity;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
@@ -45,7 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (item.getRingerMode().equals(RingerMode.NORMAL)) {
             holder.textViewLabelRingerModeVolume.setVisibility(View.VISIBLE);
             holder.mRegimeVolumeTextView.setVisibility(View.VISIBLE);
-            holder.mRegimeVolumeTextView.setText(String.valueOf(item.getRingerModeValue()));
+            holder.mRegimeVolumeTextView.setText(String.valueOf(item.getRingerModeVolume()));
         }
     }
 

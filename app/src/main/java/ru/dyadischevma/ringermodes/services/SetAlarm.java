@@ -1,15 +1,21 @@
 package ru.dyadischevma.ringermodes.services;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,12 +24,13 @@ import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.R;
+import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeRepository;
+import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 
 public class SetAlarm extends Service {
-    public SetAlarm() {
-    }
+    public static final String CUSTOM_INTENT = "ru.dyadischevma.intent.action.ALARM";
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -32,9 +39,30 @@ public class SetAlarm extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel(String channelId, String channelName) {
+        NotificationChannel chan = new NotificationChannel(channelId,
+                channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        service.createNotificationChannel(chan);
+        return channelId;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, createNotificationChannel("my_service", "My Background Service"))
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Title")
+                        .setContentText("Notification text");
+
+        Notification notification = builder.build();
+
+        startForeground(1, notification);
+
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
         int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
@@ -61,11 +89,19 @@ public class SetAlarm extends Service {
                             calendar.set(Calendar.HOUR_OF_DAY, ringerModeTimeCondition.getHour());
                             calendar.set(Calendar.MINUTE, ringerModeTimeCondition.getMinute());
                             calendar.set(Calendar.SECOND, 0);
-                            Log.d("RINGER_MODES_SET_ALARM", "Planed date: " + calendar.getTime().toString());
+                            Log.d("RINGER_MODES_SET_ALARM", "Planed date: " + calendar.getTime().toString() + " Planed mode: " + ringerMode.getRingerMode());
 
-                            Intent alarmIntent = new Intent(getApplicationContext(), ChangeRingerMode.class);
-                            alarmIntent.putExtra("RINGER_MODE", ringerMode.getRingerMode().value);
-                            PendingIntent pIntent = PendingIntent.getService(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            SharedPreferences sharedPreferences = getSharedPreferences("RINGER_MODES", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("RINGER_MODE", ringerMode.getRingerMode().value);
+                            if (ringerMode.getRingerMode().equals(RingerMode.NORMAL)) {
+                                editor.putInt("RINGER_MODE_VOLUME", ringerMode.getRingerModeVolume());
+                            }
+                            editor.apply();
+
+                            Intent alarmIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                            alarmIntent.setAction(CUSTOM_INTENT);
+                            PendingIntent pIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                             AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
                             if (alarmManager != null) {
@@ -77,6 +113,8 @@ public class SetAlarm extends Service {
                     }
                 });
         compositeDisposable.add(disposable);
+
+        stopForeground(true);
         return super.onStartCommand(intent, flags, startId);
     }
 

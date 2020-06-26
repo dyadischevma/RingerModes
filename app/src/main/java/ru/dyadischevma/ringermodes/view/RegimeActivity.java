@@ -93,17 +93,17 @@ public class RegimeActivity extends AppCompatActivity {
                                     case NORMAL:
                                         radioButtonNormal.setChecked(true);
                                         mSeekBar.setEnabled(true);
-                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
+                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeVolume());
                                         break;
                                     case VIBRATE:
                                         radioButtonVibrate.setChecked(true);
                                         mSeekBar.setEnabled(false);
-                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
+                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeVolume());
                                         break;
                                     case SILENT:
                                         radioButtonSilent.setChecked(true);
                                         mSeekBar.setEnabled(false);
-                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeValue());
+                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeVolume());
                                         break;
                                 }
                             }
@@ -159,7 +159,7 @@ public class RegimeActivity extends AppCompatActivity {
             mVolume = mSeekBar.getProgress();
             mRingerModeItem.setName(editTextName.getText().toString());
             mRingerModeItem.setRingerMode(mRingerMode);
-            mRingerModeItem.setRingerModeValue(mVolume);
+            mRingerModeItem.setRingerModeVolume(mVolume);
 
             Disposable insertRingerMode = viewModel.insertRingerMode(mRingerModeItem)
                     .subscribe(l -> {
