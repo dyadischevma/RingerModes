@@ -79,7 +79,7 @@ public class ChangeRingerMode extends JobIntentService {
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         if (audioManager != null && ringerMode != null) {
             audioManager.setRingerMode(ringerMode.value);
-            if (volume > -1) {
+            if (ringerMode.equals(RingerMode.NORMAL) && volume > -1) {
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
             }
             Log.d("RINGER_MODES", "Set mode " + ringerMode);
