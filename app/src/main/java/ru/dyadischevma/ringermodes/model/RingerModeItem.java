@@ -11,14 +11,12 @@ import java.util.UUID;
 public class RingerModeItem {
     @PrimaryKey(autoGenerate = true)
     private long id;
-    private UUID uuid;
     private String name;
     private RingerMode ringerMode;
     private int ringerModeVolume;
 
     public RingerModeItem(long id, String name, RingerMode ringerMode, int ringerModeVolume) {
         this.id = id;
-        this.uuid = UUID.randomUUID();
         this.name = name;
         this.ringerMode = ringerMode;
         this.ringerModeVolume = ringerModeVolume;
@@ -27,14 +25,12 @@ public class RingerModeItem {
     @Ignore
     public RingerModeItem(String name, RingerMode ringerMode, int ringerModeVolume) {
         this.name = name;
-        this.uuid = UUID.randomUUID();
         this.ringerMode = ringerMode;
         this.ringerModeVolume = ringerModeVolume;
     }
 
     @Ignore
     public RingerModeItem() {
-        this.uuid = UUID.randomUUID();
     }
 
     public long getId() {
@@ -69,20 +65,11 @@ public class RingerModeItem {
         this.ringerModeVolume = ringerModeVolume;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
     @NonNull
     @Override
     public String toString() {
         return "RingerModeItem{" +
                 "id=" + id +
-                ", uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", ringerMode=" + ringerMode +
                 ", ringerModeValue=" + ringerModeVolume +

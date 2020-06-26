@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -13,19 +14,19 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RingerModeRepository {
     private RingerModeDAO mRingerModeDao;
-    private LiveData<List<RingerModeItem>> mRingerModeItems;
 
     public RingerModeRepository(Application application) {
-        DataRoomDbase dataRoombase = DataRoomDbase.getDatabase(application);
-        this.mRingerModeDao = dataRoombase.dataDAO();
-        this.mRingerModeItems = mRingerModeDao.getAllRingerModeItems();
+        DataRoomDbase dataRoomDbase = DataRoomDbase.getDatabase(application);
+        this.mRingerModeDao = dataRoomDbase.dataDAO();
     }
 
     /*
     RingerModeItems
     */
-    public LiveData<List<RingerModeItem>> getAllRingerModes() {
-        return mRingerModeItems;
+    public Flowable<List<RingerModeItem>> getAllRingerModes() {
+        return mRingerModeDao.getAllRingerModeItems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Single<RingerModeItem> getRingerMode(long id) {

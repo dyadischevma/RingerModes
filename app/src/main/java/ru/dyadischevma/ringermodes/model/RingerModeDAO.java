@@ -10,6 +10,7 @@ import androidx.room.Query;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -19,7 +20,7 @@ public interface RingerModeDAO {
     RingerModeItems
      */
     @Query("SELECT * FROM ringermodeitem")
-    LiveData<List<RingerModeItem>> getAllRingerModeItems();
+    Flowable<List<RingerModeItem>> getAllRingerModeItems();
 
     @Query("SELECT * FROM ringermodeitem WHERE id = :itemId")
     Single<RingerModeItem> getRingerMode(long itemId);

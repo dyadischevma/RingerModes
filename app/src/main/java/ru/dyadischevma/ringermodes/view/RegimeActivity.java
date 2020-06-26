@@ -13,7 +13,6 @@ import android.widget.TimePicker;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,10 +26,10 @@ import java.util.List;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.R;
-import ru.dyadischevma.ringermodes.model.DataViewModel;
 import ru.dyadischevma.ringermodes.model.RingerMode;
-import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.RingerModeRepository;
+import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 
 public class RegimeActivity extends AppCompatActivity {
     private RingerMode mRingerMode = RingerMode.NORMAL;
@@ -39,9 +38,10 @@ public class RegimeActivity extends AppCompatActivity {
     List<Integer> mDaysList = new ArrayList<>();
 
     private RingerModeItem mRingerModeItem;
-    private DataViewModel viewModel;
     private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
     private List<RingerModeTimeCondition> mRingerModeTimeConditionsList = new ArrayList<>();
+
+    RingerModeRepository mRingerModeRepository;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -72,17 +72,17 @@ public class RegimeActivity extends AppCompatActivity {
 
         long ringerModeId = getIntent().getLongExtra("ringerModeId", -1);
 
-        viewModel = new ViewModelProvider(this).get(DataViewModel.class);
+        mRingerModeRepository = new RingerModeRepository(getApplication());
         if (ringerModeId == -1) {
             mRingerModeItem = new RingerModeItem();
         } else {
-            viewModel.getTimeConditions(ringerModeId).observe(this, ringerModeConditionsList -> {
+            mRingerModeRepository.getTimeConditions(ringerModeId).observe(this, ringerModeConditionsList -> {
                 if (ringerModeConditionsList != null) {
                     setConditionsListData(ringerModeConditionsList);
                 }
             });
 
-            Disposable disposable = viewModel.getRingerMode(ringerModeId)
+            Disposable disposable = mRingerModeRepository.getRingerMode(ringerModeId)
                     .subscribe(ringerModeItem -> {
                                 mRingerModeItem = ringerModeItem;
                                 mRingerMode = ringerModeItem.getRingerMode();
@@ -161,12 +161,12 @@ public class RegimeActivity extends AppCompatActivity {
             mRingerModeItem.setRingerMode(mRingerMode);
             mRingerModeItem.setRingerModeVolume(mVolume);
 
-            Disposable insertRingerMode = viewModel.insertRingerMode(mRingerModeItem)
+            Disposable insertRingerMode = mRingerModeRepository.insertRingerMode(mRingerModeItem)
                     .subscribe(l -> {
                         for (RingerModeTimeCondition rmc : mRingerModeTimeConditionsList) {
                             rmc.setRingerModeId(l);
                         }
-                        viewModel.insertRingerModeTimeConditions(mRingerModeTimeConditionsList);
+                        mRingerModeRepository.insertRingerModeTimeConditions(mRingerModeTimeConditionsList);
                     });
             finish();
             compositeDisposable.add(insertRingerMode);
@@ -212,7 +212,7 @@ public class RegimeActivity extends AppCompatActivity {
     };
 
     public void deleteRingerModeConditionItem(RingerModeTimeCondition ringerModeTimeCondition) {
-        viewModel.deleteRingerModeTimeCondition(ringerModeTimeCondition);
+        mRingerModeRepository.deleteRingerModeTimeCondition(ringerModeTimeCondition);
     }
 
     private void setConditionsListData(List<RingerModeTimeCondition> ringerModeTimeConditionsList) {

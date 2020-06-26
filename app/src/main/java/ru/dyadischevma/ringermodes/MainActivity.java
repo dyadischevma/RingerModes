@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +16,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.dyadischevma.ringermodes.model.DataViewModel;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 import ru.dyadischevma.ringermodes.services.SetAlarm;
 import ru.dyadischevma.ringermodes.view.RecyclerViewAdapter;
 import ru.dyadischevma.ringermodes.view.RegimeActivity;
@@ -26,9 +27,10 @@ import ru.dyadischevma.ringermodes.view.SwipeToDeleteHelperCallback;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DataViewModel viewModel;
     private List<RingerModeItem> mRingerModeItemList;
     private RecyclerViewAdapter mRecyclerViewAdapter;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+    RingerModeRepository mRingerModeRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +45,14 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 0);
         }
 
-        viewModel = new ViewModelProvider(this).get(DataViewModel.class);
-        viewModel.getAllRingerModes().observe(this, dataItems -> {
-            if (dataItems != null) {
-                setListData(dataItems);
-            }
-        });
+        mRingerModeRepository = new RingerModeRepository(getApplication());
+
+        Disposable disposable = mRingerModeRepository.getAllRingerModes()
+                .subscribe(ringerModeItemList -> {
+                    if (ringerModeItemList != null) {
+                        setListData(ringerModeItemList);
+                    }
+                });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -68,12 +72,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, RegimeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         });
+        compositeDisposable.add(disposable);
     }
 
     @Override
     protected void onResume() {
         startService(new Intent(this, SetAlarm.class));
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
     }
 
     private void setListData(List<RingerModeItem> dataItemList) {
@@ -89,6 +100,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteItem(RingerModeItem ringerModeItem) {
-        viewModel.deleteRingerMode(ringerModeItem);
+        mRingerModeRepository.deleteRingerMode(ringerModeItem);
     }
 }
