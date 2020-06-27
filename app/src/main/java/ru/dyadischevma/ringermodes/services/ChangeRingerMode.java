@@ -73,9 +73,11 @@ public class ChangeRingerMode extends JobIntentService {
             if (ringerMode.equals(RingerMode.NORMAL) && volume > -1) {
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, volume, 0);
             }
+            Log.d("RINGER_MODES", "Current mode " +  RingerMode.fromInt(audioManager.getRingerMode()));
             Log.d("RINGER_MODES", "Set mode " + ringerMode);
         }
         Helper.setAlarm(new RingerModeRepository(getApplication()), getApplicationContext(), compositeDisposable);
+        stopForeground(true);
         return super.onBind(intent);
     }
 

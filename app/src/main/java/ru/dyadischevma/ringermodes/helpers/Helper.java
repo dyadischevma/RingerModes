@@ -22,7 +22,7 @@ import ru.dyadischevma.ringermodes.services.AlarmReceiver;
 public class Helper {
     public static final String CUSTOM_INTENT = "ru.dyadischevma.intent.action.ALARM";
 
-    public static RingerModeTimeCondition getNearestCondition(int currentHour, int currentMinute, int currentDay, List<RingerModeTimeCondition> ringerModeTimeConditionArrayList) {
+    private static RingerModeTimeCondition getNearestCondition(int currentHour, int currentMinute, int currentDay, List<RingerModeTimeCondition> ringerModeTimeConditionArrayList) {
         ArrayList<RingerModeTimeCondition> resultList = new ArrayList<>();
         for (RingerModeTimeCondition rmc : ringerModeTimeConditionArrayList) {
             if (rmc.getDays().contains(String.valueOf(currentDay)) &&

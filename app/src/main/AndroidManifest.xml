@@ -14,16 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".services.AlarmReceiver" android:enabled="true">
+        <receiver
+            android:name=".services.AlarmReceiver"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="ru.dyadischevma.intent.action.ALARM" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".services.SetAlarm"
-            android:enabled="true"
-            android:exported="false" />
         <service
             android:name=".services.ChangeRingerMode"
             android:enabled="true"
