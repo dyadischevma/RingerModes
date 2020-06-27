@@ -1,11 +1,9 @@
-package ru.dyadischevma.ringermodes.model;
+package ru.dyadischevma.ringermodes.data;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import java.util.UUID;
 
 @Entity
 public class RingerModeItem {

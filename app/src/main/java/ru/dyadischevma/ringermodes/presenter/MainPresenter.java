@@ -10,7 +10,7 @@ import android.provider.Settings;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.helpers.Helper;
-import ru.dyadischevma.ringermodes.model.RingerModeItem;
+import ru.dyadischevma.ringermodes.data.RingerModeItem;
 import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 import ru.dyadischevma.ringermodes.view.MainActivity;
 import ru.dyadischevma.ringermodes.view.RegimeActivity;

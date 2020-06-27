@@ -1,4 +1,4 @@
-package ru.dyadischevma.ringermodes.model;
+package ru.dyadischevma.ringermodes.data;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

@@ -7,6 +7,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import ru.dyadischevma.ringermodes.data.RingerModeItem;
+import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
+
 @Database(entities = {RingerModeItem.class, RingerModeTimeCondition.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class DataRoomDbase extends RoomDatabase {

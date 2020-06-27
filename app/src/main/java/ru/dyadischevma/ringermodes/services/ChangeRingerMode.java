@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat;
 import io.reactivex.disposables.CompositeDisposable;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.helpers.Helper;
-import ru.dyadischevma.ringermodes.model.RingerMode;
+import ru.dyadischevma.ringermodes.data.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 
 public class ChangeRingerMode extends JobIntentService {

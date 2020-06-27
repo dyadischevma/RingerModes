@@ -1,6 +1,5 @@
 package ru.dyadischevma.ringermodes.model;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -13,6 +12,8 @@ import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
+import ru.dyadischevma.ringermodes.data.RingerModeItem;
+import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
 
 @Dao
 public interface RingerModeDAO {
