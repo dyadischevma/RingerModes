@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
 
@@ -24,26 +25,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import ru.dyadischevma.ringermodes.R;
+import ru.dyadischevma.ringermodes.adapters.RecyclerViewConditionsAdapter;
+import ru.dyadischevma.ringermodes.adapters.SwipeToDeleteTimeConditionHelperCallback;
 import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
-import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.presenter.RegimePresenter;
 
 public class RegimeActivity extends AppCompatActivity {
-    private RingerMode mRingerMode = RingerMode.NORMAL;
     private SeekBar mSeekBar;
-    private int mVolume = 0;
     List<Integer> mDaysList = new ArrayList<>();
 
-    private RingerModeItem mRingerModeItem;
     private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
-    private List<RingerModeTimeCondition> mRingerModeTimeConditionsList = new ArrayList<>();
-
-    RingerModeRepository mRingerModeRepository;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    EditText editTextName;
+
+    RadioGroup radioGroup;
+
+    RadioButton radioButtonNormal;
+    RadioButton radioButtonVibrate;
+    RadioButton radioButtonSilent;
+
+    RegimePresenter presenter;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -51,16 +57,17 @@ public class RegimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regime);
 
-        final EditText editTextName = findViewById(R.id.editTextTextName);
+        editTextName = findViewById(R.id.editTextTextName);
         editTextName.requestFocus();
 
-        RadioButton radioButtonNormal = findViewById(R.id.radioButtonNormal);
+        radioGroup = findViewById(R.id.radioGroup);
+        radioButtonNormal = findViewById(R.id.radioButtonNormal);
         radioButtonNormal.setOnClickListener(radioButtonClickListener);
 
-        RadioButton radioButtonVibrate = findViewById(R.id.radioButtonVibrate);
+        radioButtonVibrate = findViewById(R.id.radioButtonVibrate);
         radioButtonVibrate.setOnClickListener(radioButtonClickListener);
 
-        RadioButton radioButtonSilent = findViewById(R.id.radioButtonSilent);
+        radioButtonSilent = findViewById(R.id.radioButtonSilent);
         radioButtonSilent.setOnClickListener(radioButtonClickListener);
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -71,45 +78,7 @@ public class RegimeActivity extends AppCompatActivity {
         }
 
         long ringerModeId = getIntent().getLongExtra("ringerModeId", -1);
-
-        mRingerModeRepository = new RingerModeRepository(getApplication());
-        if (ringerModeId == -1) {
-            mRingerModeItem = new RingerModeItem();
-        } else {
-            mRingerModeRepository.getTimeConditions(ringerModeId).observe(this, ringerModeConditionsList -> {
-                if (ringerModeConditionsList != null) {
-                    setConditionsListData(ringerModeConditionsList);
-                }
-            });
-
-            Disposable disposable = mRingerModeRepository.getRingerMode(ringerModeId)
-                    .subscribe(ringerModeItem -> {
-                                mRingerModeItem = ringerModeItem;
-                                mRingerMode = ringerModeItem.getRingerMode();
-                                editTextName.setText(mRingerModeItem.getName());
-                                editTextName.setSelection(editTextName.getText().toString().length());
-
-                                switch (mRingerModeItem.getRingerMode()) {
-                                    case NORMAL:
-                                        radioButtonNormal.setChecked(true);
-                                        mSeekBar.setEnabled(true);
-                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeVolume());
-                                        break;
-                                    case VIBRATE:
-                                        radioButtonVibrate.setChecked(true);
-                                        mSeekBar.setEnabled(false);
-                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeVolume());
-                                        break;
-                                    case SILENT:
-                                        radioButtonSilent.setChecked(true);
-                                        mSeekBar.setEnabled(false);
-                                        mSeekBar.setProgress(mRingerModeItem.getRingerModeVolume());
-                                        break;
-                                }
-                            }
-                    );
-            compositeDisposable.add(disposable);
-        }
+        presenter = new RegimePresenter(getApplication(), ringerModeId);
 
         FloatingActionButton floatingActionButtonAddTime = findViewById(R.id.floatingActionButtonAddTime);
         floatingActionButtonAddTime.setOnClickListener(v ->
@@ -131,8 +100,9 @@ public class RegimeActivity extends AppCompatActivity {
                 for (int day : mDaysList) {
                     days.append(day);
                 }
-                mRingerModeTimeConditionsList.add(new RingerModeTimeCondition(timePicker.getHour(), timePicker.getMinute(), days.toString()));
-                mRecyclerViewConditionsAdapter.setTimesListData(mRingerModeTimeConditionsList);
+                presenter.addToRingerModeTimeConditionsList(
+                        new RingerModeTimeCondition(timePicker.getHour(), timePicker.getMinute(), days.toString()));
+                mRecyclerViewConditionsAdapter.setTimesListData(presenter.getRingerModeTimeConditionsList());
             });
 
             AlertDialog dialog = builder.create();
@@ -142,35 +112,17 @@ public class RegimeActivity extends AppCompatActivity {
         RecyclerView recyclerViewTimes = findViewById(R.id.recyclerViewTimes);
         recyclerViewTimes.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerViewConditionsAdapter = new RecyclerViewConditionsAdapter();
-
-        if (mRingerModeTimeConditionsList != null) {
-            mRecyclerViewConditionsAdapter.setTimesListData(mRingerModeTimeConditionsList);
-        }
         recyclerViewTimes.setAdapter(mRecyclerViewConditionsAdapter);
 
-        SwipeToDeleteTimeConditionHelperCallback swipeToDeleteTimeConditionHelperCallback = new SwipeToDeleteTimeConditionHelperCallback(mRecyclerViewConditionsAdapter, this);
+        SwipeToDeleteTimeConditionHelperCallback swipeToDeleteTimeConditionHelperCallback = new SwipeToDeleteTimeConditionHelperCallback(mRecyclerViewConditionsAdapter, presenter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteTimeConditionHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewTimes);
 
         FloatingActionButton floatingActionButtonSave = findViewById(R.id.floatingActionButtonSave);
-        floatingActionButtonSave.setOnClickListener(v ->
+        floatingActionButtonSave.setOnClickListener(v -> presenter.saveRegime());
 
-        {
-            mVolume = mSeekBar.getProgress();
-            mRingerModeItem.setName(editTextName.getText().toString());
-            mRingerModeItem.setRingerMode(mRingerMode);
-            mRingerModeItem.setRingerModeVolume(mVolume);
-
-            Disposable insertRingerMode = mRingerModeRepository.insertRingerMode(mRingerModeItem)
-                    .subscribe(l -> {
-                        for (RingerModeTimeCondition rmc : mRingerModeTimeConditionsList) {
-                            rmc.setRingerModeId(l);
-                        }
-                        mRingerModeRepository.insertRingerModeTimeConditions(mRingerModeTimeConditionsList);
-                    });
-            finish();
-            compositeDisposable.add(insertRingerMode);
-        });
+        presenter.attachView(this);
+        presenter.viewIsReady();
     }
 
     @Override
@@ -185,22 +137,13 @@ public class RegimeActivity extends AppCompatActivity {
             RadioButton rb = (RadioButton) v;
             switch (rb.getId()) {
                 case R.id.radioButtonNormal:
-                    mRingerMode = RingerMode.NORMAL;
                     mSeekBar.setEnabled(true);
-                    mSeekBar.setProgress(mVolume);
+                    mSeekBar.setProgress(presenter.getVolume());
                     break;
                 case R.id.radioButtonVibrate:
-                    mRingerMode = RingerMode.VIBRATE;
-                    if (mSeekBar.isEnabled()) {
-                        mVolume = mSeekBar.getProgress();
-                    }
-                    mSeekBar.setEnabled(false);
-                    mSeekBar.setProgress(0);
-                    break;
                 case R.id.radioButtonSilent:
-                    mRingerMode = RingerMode.SILENT;
                     if (mSeekBar.isEnabled()) {
-                        mVolume = mSeekBar.getProgress();
+                        presenter.setVolume(mSeekBar.getProgress());
                     }
                     mSeekBar.setEnabled(false);
                     mSeekBar.setProgress(0);
@@ -212,18 +155,54 @@ public class RegimeActivity extends AppCompatActivity {
     };
 
     public void deleteRingerModeConditionItem(RingerModeTimeCondition ringerModeTimeCondition) {
-        mRingerModeRepository.deleteRingerModeTimeCondition(ringerModeTimeCondition);
+        presenter.deleteRingerModeTimeCondition(ringerModeTimeCondition);
     }
 
-    private void setConditionsListData(List<RingerModeTimeCondition> ringerModeTimeConditionsList) {
-        if (mRingerModeTimeConditionsList == null) {
-            mRingerModeTimeConditionsList = new ArrayList<>();
-        }
-        mRingerModeTimeConditionsList.clear();
-        mRingerModeTimeConditionsList.addAll(ringerModeTimeConditionsList);
+    public void setRingerMode(RingerModeItem ringerMode) {
+        editTextName.setText(ringerMode.getName());
+        editTextName.setSelection(editTextName.getText().toString().length());
 
-        if (mRecyclerViewConditionsAdapter != null) {
-            mRecyclerViewConditionsAdapter.setTimesListData(ringerModeTimeConditionsList);
+        switch (ringerMode.getRingerMode()) {
+            case NORMAL:
+                radioButtonNormal.setChecked(true);
+                mSeekBar.setEnabled(true);
+                mSeekBar.setProgress(ringerMode.getRingerModeVolume());
+                break;
+            case VIBRATE:
+                radioButtonVibrate.setChecked(true);
+                mSeekBar.setEnabled(false);
+                mSeekBar.setProgress(ringerMode.getRingerModeVolume());
+                break;
+            case SILENT:
+                radioButtonSilent.setChecked(true);
+                mSeekBar.setEnabled(false);
+                mSeekBar.setProgress(ringerMode.getRingerModeVolume());
+                break;
         }
+    }
+
+    public RingerMode getRingerMode() {
+        int checkedButton = radioGroup.getCheckedRadioButtonId();
+        switch (checkedButton) {
+            case R.id.radioButtonNormal:
+                return RingerMode.NORMAL;
+            case R.id.radioButtonVibrate:
+                return RingerMode.VIBRATE;
+            case R.id.radioButtonSilent:
+                return RingerMode.SILENT;
+        }
+        return RingerMode.NORMAL;
+    }
+
+    public RingerModeItem getRingerModeItem() {
+        RingerModeItem ringerModeItem = new RingerModeItem();
+        ringerModeItem.setName(editTextName.getText().toString());
+        ringerModeItem.setRingerMode(getRingerMode());
+        ringerModeItem.setRingerModeVolume(mSeekBar.getProgress());
+        return ringerModeItem;
+    }
+
+    public void setConditionsListData(List<RingerModeTimeCondition> ringerModeTimeConditionsList) {
+        mRecyclerViewConditionsAdapter.setTimesListData(ringerModeTimeConditionsList);
     }
 }

@@ -38,7 +38,7 @@ public interface RingerModeDAO {
     Single<List<RingerModeTimeCondition>> getAllTimeConditions();
 
     @Query("SELECT * FROM RingerModeTimeCondition WHERE ringerModeId = :ringerModeId")
-    LiveData<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId);
+    Flowable<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId);
 
     @Query("SELECT * FROM RingerModeTimeCondition WHERE (hour > :hour OR (hour = :hour AND minute > :minute )) AND days LIKE :day ORDER BY hour")
     Maybe<RingerModeTimeCondition> getNearestTimeCondition(int hour, int minute, String day);

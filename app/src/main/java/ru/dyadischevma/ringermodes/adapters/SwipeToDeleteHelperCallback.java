@@ -1,23 +1,24 @@
-package ru.dyadischevma.ringermodes.view;
+package ru.dyadischevma.ringermodes.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SwipeToDeleteTimeConditionHelperCallback extends ItemTouchHelper.Callback {
-    private RecyclerViewConditionsAdapter mAdapter;
-    RegimeActivity mActivity;
+import ru.dyadischevma.ringermodes.presenter.MainPresenter;
 
-    public SwipeToDeleteTimeConditionHelperCallback(RecyclerViewConditionsAdapter adapter, RegimeActivity activity) {
+public class SwipeToDeleteHelperCallback extends ItemTouchHelper.Callback {
+    private RecyclerViewAdapter mAdapter;
+    MainPresenter mPresenter;
+
+    public SwipeToDeleteHelperCallback(RecyclerViewAdapter adapter, MainPresenter presenter) {
         mAdapter = adapter;
-        mActivity = activity;
+        mPresenter = presenter;
     }
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return makeMovementFlags(0, swipeFlags);
     }
 
     @Override
@@ -27,6 +28,6 @@ public class SwipeToDeleteTimeConditionHelperCallback extends ItemTouchHelper.Ca
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        mActivity.deleteRingerModeConditionItem(mAdapter.getItem(viewHolder.getAdapterPosition()));
+        mPresenter.deleteRingerMode(mAdapter.getItem(viewHolder.getAdapterPosition()));
     }
 }

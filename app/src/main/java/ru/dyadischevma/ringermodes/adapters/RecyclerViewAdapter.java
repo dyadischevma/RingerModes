@@ -1,4 +1,4 @@
-package ru.dyadischevma.ringermodes.view;
+package ru.dyadischevma.ringermodes.adapters;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import java.util.List;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeItem;
+import ru.dyadischevma.ringermodes.view.RegimeActivity;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private List<RingerModeItem> mDataItemList;

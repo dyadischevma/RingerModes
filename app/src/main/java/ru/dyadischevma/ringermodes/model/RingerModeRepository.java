@@ -57,8 +57,9 @@ public class RingerModeRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public LiveData<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId) {
-        return mRingerModeDao.getTimeConditions(ringerModeId);
+    public Flowable<List<RingerModeTimeCondition>> getTimeConditions(long ringerModeId) {
+        return mRingerModeDao.getTimeConditions(ringerModeId)
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Maybe<RingerModeTimeCondition> getNearestTimeCondition(int hour, int minutes, int day) {

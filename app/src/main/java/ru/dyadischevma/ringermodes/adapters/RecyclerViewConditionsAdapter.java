@@ -1,4 +1,4 @@
-package ru.dyadischevma.ringermodes.view;
+package ru.dyadischevma.ringermodes.adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
