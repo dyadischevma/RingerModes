@@ -1,30 +1,22 @@
 package ru.dyadischevma.ringermodes.services;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import ru.dyadischevma.ringermodes.R;
+import ru.dyadischevma.ringermodes.helpers.Helper;
 import ru.dyadischevma.ringermodes.model.RingerMode;
 import ru.dyadischevma.ringermodes.model.RingerModeRepository;
 import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
@@ -39,29 +31,9 @@ public class SetAlarm extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private String createNotificationChannel(String channelId, String channelName) {
-        NotificationChannel chan = new NotificationChannel(channelId,
-                channelName, NotificationManager.IMPORTANCE_NONE);
-        chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        service.createNotificationChannel(chan);
-        return channelId;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, createNotificationChannel("my_service", "My Background Service"))
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Title")
-                        .setContentText("Notification text");
-
-        Notification notification = builder.build();
-
-        startForeground(1, notification);
 
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
@@ -70,7 +42,7 @@ public class SetAlarm extends Service {
         RingerModeRepository ringerModeRepository = new RingerModeRepository(getApplication());
         Disposable disposable = ringerModeRepository.getAllTimeConditions()
                 .subscribe(s -> {
-                    RingerModeTimeCondition ringerModeTimeCondition = getNearestCondition(currentHour, currentMinute, currentDay, s);
+                    RingerModeTimeCondition ringerModeTimeCondition = Helper.getNearestCondition(currentHour, currentMinute, currentDay, s);
                     if (ringerModeTimeCondition != null) {
                         Disposable ringerModeDisposable = ringerModeRepository.getRingerMode(ringerModeTimeCondition.getRingerModeId()).subscribe(ringerMode -> {
                             Log.d("RINGER_MODES_SET_ALARM", ringerMode.toString());
@@ -114,45 +86,12 @@ public class SetAlarm extends Service {
                 });
         compositeDisposable.add(disposable);
 
-        stopForeground(true);
         return super.onStartCommand(intent, flags, startId);
     }
-
 
     @Override
     public void onDestroy() {
         compositeDisposable.dispose();
         super.onDestroy();
-    }
-
-    private RingerModeTimeCondition getNearestCondition(int currentHour, int currentMinute, int currentDay, List<RingerModeTimeCondition> ringerModeTimeConditionArrayList) {
-        ArrayList<RingerModeTimeCondition> resultList = new ArrayList<>();
-        for (RingerModeTimeCondition rmc : ringerModeTimeConditionArrayList) {
-            if (rmc.getDays().contains(String.valueOf(currentDay)) &&
-                    rmc.getHour() > currentHour || rmc.getHour() == currentHour && rmc.getMinute() > currentMinute) {
-                resultList.add(rmc);
-            }
-        }
-        if (!resultList.isEmpty()) {
-            Collections.sort(resultList);
-            return resultList.get(0);
-        } else currentDay++;
-
-        for (int i = 0; i < 7; i++) {
-            for (RingerModeTimeCondition rmc : ringerModeTimeConditionArrayList) {
-                if (rmc.getDays().contains(String.valueOf(currentDay))) {
-                    resultList.add(rmc);
-                }
-            }
-            if (!resultList.isEmpty()) {
-                Collections.sort(resultList);
-                return resultList.get(0);
-            } else currentDay++;
-            if (currentDay == 8) {
-                currentDay = 1;
-            }
-        }
-        Log.d("RINGER_MODES", "null");
-        return null;
     }
 }
