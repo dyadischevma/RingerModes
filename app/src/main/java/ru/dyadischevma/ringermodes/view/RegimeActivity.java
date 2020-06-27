@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dpro.widgets.WeekdaysPicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,11 +33,7 @@ import ru.dyadischevma.ringermodes.model.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.presenter.RegimePresenter;
 
 public class RegimeActivity extends AppCompatActivity {
-    private SeekBar mSeekBar;
-    List<Integer> mDaysList = new ArrayList<>();
-
     private RecyclerViewConditionsAdapter mRecyclerViewConditionsAdapter;
-
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     EditText editTextName;
@@ -48,6 +43,8 @@ public class RegimeActivity extends AppCompatActivity {
     RadioButton radioButtonNormal;
     RadioButton radioButtonVibrate;
     RadioButton radioButtonSilent;
+
+    private SeekBar mSeekBar;
 
     RegimePresenter presenter;
 
@@ -95,7 +92,7 @@ public class RegimeActivity extends AppCompatActivity {
             WeekdaysPicker weekdaysPicker = customLayout.findViewById(R.id.dialogWeekdaysPicker);
 
             builder.setPositiveButton("OK", (dialog, which) -> {
-                mDaysList = weekdaysPicker.getSelectedDays();
+                List<Integer> mDaysList = weekdaysPicker.getSelectedDays();
                 StringBuilder days = new StringBuilder();
                 for (int day : mDaysList) {
                     days.append(day);
@@ -148,15 +145,9 @@ public class RegimeActivity extends AppCompatActivity {
                     mSeekBar.setEnabled(false);
                     mSeekBar.setProgress(0);
                     break;
-                default:
-                    break;
             }
         }
     };
-
-    public void deleteRingerModeConditionItem(RingerModeTimeCondition ringerModeTimeCondition) {
-        presenter.deleteRingerModeTimeCondition(ringerModeTimeCondition);
-    }
 
     public void setRingerMode(RingerModeItem ringerMode) {
         editTextName.setText(ringerMode.getName());

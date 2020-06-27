@@ -1,5 +1,6 @@
 package ru.dyadischevma.ringermodes.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import ru.dyadischevma.ringermodes.model.RingerModeItem;
 import ru.dyadischevma.ringermodes.presenter.MainPresenter;
 import ru.dyadischevma.ringermodes.adapters.RecyclerViewAdapter;
 import ru.dyadischevma.ringermodes.adapters.SwipeToDeleteHelperCallback;
+import ru.dyadischevma.ringermodes.services.SetAlarm;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerViewAdapter mRecyclerViewAdapter;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        startService(new Intent(this, SetAlarm.class));
         super.onResume();
     }
 
