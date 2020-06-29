@@ -14,7 +14,7 @@ import java.util.List;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.adapters.RecyclerViewAdapter;
 import ru.dyadischevma.ringermodes.adapters.SwipeToDeleteHelperCallback;
-import ru.dyadischevma.ringermodes.data.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeItem;
 import ru.dyadischevma.ringermodes.presenter.MainPresenter;
 
 public class MainActivity extends AppCompatActivity {

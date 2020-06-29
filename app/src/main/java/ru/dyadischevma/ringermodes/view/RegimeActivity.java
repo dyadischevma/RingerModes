@@ -27,9 +27,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import ru.dyadischevma.ringermodes.R;
 import ru.dyadischevma.ringermodes.adapters.RecyclerViewConditionsAdapter;
 import ru.dyadischevma.ringermodes.adapters.SwipeToDeleteTimeConditionHelperCallback;
-import ru.dyadischevma.ringermodes.data.RingerMode;
-import ru.dyadischevma.ringermodes.data.RingerModeItem;
-import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.model.entity.RingerMode;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.presenter.RegimePresenter;
 
 public class RegimeActivity extends AppCompatActivity {

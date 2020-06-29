@@ -7,8 +7,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import ru.dyadischevma.ringermodes.data.RingerModeItem;
-import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.model.converters.Converters;
+import ru.dyadischevma.ringermodes.model.dao.RingerModeDAO;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeTimeCondition;
 
 @Database(entities = {RingerModeItem.class, RingerModeTimeCondition.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.dyadischevma.ringermodes.R;
-import ru.dyadischevma.ringermodes.data.RingerMode;
-import ru.dyadischevma.ringermodes.data.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.entity.RingerMode;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeItem;
 import ru.dyadischevma.ringermodes.view.RegimeActivity;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {

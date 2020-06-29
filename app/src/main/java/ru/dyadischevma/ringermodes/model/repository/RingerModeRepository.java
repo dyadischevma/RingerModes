@@ -1,4 +1,4 @@
-package ru.dyadischevma.ringermodes.model;
+package ru.dyadischevma.ringermodes.model.repository;
 
 import android.app.Application;
 
@@ -9,8 +9,10 @@ import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import ru.dyadischevma.ringermodes.data.RingerModeItem;
-import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.model.DataRoomDbase;
+import ru.dyadischevma.ringermodes.model.dao.RingerModeDAO;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeTimeCondition;
 
 public class RingerModeRepository {
     private RingerModeDAO mRingerModeDao;

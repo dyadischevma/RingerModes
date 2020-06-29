@@ -8,10 +8,10 @@ import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import ru.dyadischevma.ringermodes.data.RingerMode;
-import ru.dyadischevma.ringermodes.data.RingerModeItem;
-import ru.dyadischevma.ringermodes.model.RingerModeRepository;
-import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.model.entity.RingerMode;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeItem;
+import ru.dyadischevma.ringermodes.model.repository.RingerModeRepository;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeTimeCondition;
 import ru.dyadischevma.ringermodes.view.RegimeActivity;
 
 

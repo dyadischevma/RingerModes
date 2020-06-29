@@ -1,4 +1,4 @@
-package ru.dyadischevma.ringermodes.data;
+package ru.dyadischevma.ringermodes.model.entity;
 
 public enum RingerMode {
     SILENT(0),

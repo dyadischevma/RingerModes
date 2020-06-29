@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.dyadischevma.ringermodes.R;
-import ru.dyadischevma.ringermodes.data.RingerModeTimeCondition;
+import ru.dyadischevma.ringermodes.model.entity.RingerModeTimeCondition;
 
 public class RecyclerViewConditionsAdapter extends RecyclerView.Adapter<RecyclerViewConditionsAdapter.ViewHolder> {
     private List<RingerModeTimeCondition> mRingerModeTimeConditionsList;
