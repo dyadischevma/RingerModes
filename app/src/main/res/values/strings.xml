@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Ringer Modes</string>
+    <string name="name">Name:</string>
+    <string name="ringer_mode">Ringer Mode:</string>
+    <string name="volume">Volume:</string>
+    <string name="nameHint">Name</string>
+    <string name="ringer_modes_normal">NORMAL</string>
+    <string name="ringer_modes_vibrate">VIBRATE</string>
+    <string name="ringer_modes_silent">SALENT</string>
+    <string name="button_add">Add</string>
+    <string name="time">Time</string>
+    <string name="timeDelimiter">:</string>
+    <string name="add_time">Add Time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="example_time">12:20</string>
+    <string name="this_regime_starting_on">This regime starting on:</string>
 </resources>
