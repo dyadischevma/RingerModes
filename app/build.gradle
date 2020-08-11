@@ -10,7 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testApplicationId "ru.dyadischevma.ringermodes.test"
+        testInstrumentationRunner "ru.dyadischevma.ringermodes.test.Runner"
     }
 
     buildTypes {
@@ -55,7 +56,11 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestUtil 'androidx.test:orchestrator:1.2.0'
+
+    // Use the stable Cucumber version
+    androidTestImplementation "io.cucumber:cucumber-android:4.8.3"
 }
