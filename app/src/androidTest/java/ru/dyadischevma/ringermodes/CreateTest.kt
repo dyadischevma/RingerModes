@@ -4,7 +4,6 @@ import android.Manifest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
-import com.kaspersky.test_server.AdbTerminal
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Rule
@@ -37,7 +36,6 @@ class CreateTest : TestCase() {
     @Test
     @Parameters(value = ["Test, NORMAL", "Test2, VIBRATE"])
     fun test(testName: String, regime: String) = before {
-        AdbTerminal.connect()
         try {
             flakySafely(timeoutMs = 200) {
                 DoNotDisturbGrantsScreen().textViewAppName.click()
