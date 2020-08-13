@@ -32,6 +32,9 @@ public interface RingerModeDAO {
     @Delete
     Completable deleteRingerMode(RingerModeItem item);
 
+    @Query("DELETE FROM ringermodeitem WHERE name = :itemName")
+    Completable deleteRingerMode(String itemName);
+
     /*
     RingerModeCondition
      */

@@ -48,6 +48,13 @@ public class RingerModeRepository {
                 .subscribe();
     }
 
+    public void deleteRingerMode(String itemName) {
+        mRingerModeDao.deleteRingerMode(itemName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+    }
+
     /*
     RingerModeTimeCondition
     */
