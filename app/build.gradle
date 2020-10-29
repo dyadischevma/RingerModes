@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: "de.mannodermaus.android-junit5"
 
 android {
     compileSdkVersion 29
@@ -10,7 +11,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
+        testApplicationId "ru.dyadischevma.ringermodes.test"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -55,8 +56,6 @@ dependencies {
     //for recyclerview items
     implementation 'androidx.cardview:cardview:1.0.0'
 
-    testImplementation 'junit:junit:4.12'
-
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.1.0'
@@ -64,6 +63,19 @@ dependencies {
 
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    androidTestImplementation 'com.squareup.spoon:spoon-client:1.7.1'// For Spoon snapshot, until 2.0.0 is released
+
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.6.2"
+
+    // (Optional) If you need "Parameterized Tests"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.6.2"
+
+    // (Optional) If you also have JUnit 4-based tests
+    testImplementation "junit:junit:4.13"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.6.2"
 }
 
 repositories {
